@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.ElasticSearch简介ES是目前全文搜索引擎首选，可以快速存储、搜索和分析海量数据，维基百科、Stack Overflow、Github都采用它。ES底层是开源库Lucene，ES是Lucene的封装，提供REST API的操作接口，开箱即用。 二.ES安装安装较为简单，需要先安装JAVA8，通过官网下载，下载地址。解压到目录下，输入下面命令启动ES">
+<meta name="keywords" content="losergzr&#39;s blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es学习笔记">
+<meta property="og:url" content="http://losergzr.cn/2018/10/29/ElasticSearch入门/index.html">
+<meta property="og:site_name" content="losergzr&#39;s blog">
+<meta property="og:description" content="一.ElasticSearch简介ES是目前全文搜索引擎首选，可以快速存储、搜索和分析海量数据，维基百科、Stack Overflow、Github都采用它。ES底层是开源库Lucene，ES是Lucene的封装，提供REST API的操作接口，开箱即用。 二.ES安装安装较为简单，需要先安装JAVA8，通过官网下载，下载地址。解压到目录下，输入下面命令启动ES">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47728329-1974eb80-dc99-11e8-83b6-405a9b7e176b.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47728722-e1ba7380-dc99-11e8-85b0-4536a93f3918.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47728752-f1d25300-dc99-11e8-9768-e8248a3a2168.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47729171-a4a2b100-dc9a-11e8-96ca-4d25512a99c1.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47729683-9608c980-dc9b-11e8-81a8-6d96ef47bb8d.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/47730091-6a3a1380-dc9c-11e8-8f4c-779f7b2b47ce.png">
+<meta property="og:updated_time" content="2018-10-30T15:51:06.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="es学习笔记">
+<meta name="twitter:description" content="一.ElasticSearch简介ES是目前全文搜索引擎首选，可以快速存储、搜索和分析海量数据，维基百科、Stack Overflow、Github都采用它。ES底层是开源库Lucene，ES是Lucene的封装，提供REST API的操作接口，开箱即用。 二.ES安装安装较为简单，需要先安装JAVA8，通过官网下载，下载地址。解压到目录下，输入下面命令启动ES">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/47728329-1974eb80-dc99-11e8-83b6-405a9b7e176b.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://losergzr.cn/2018/10/29/ElasticSearch入门/"/>
+
+
+
+
+
+  <title>es学习笔记 | losergzr's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">losergzr's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2018/10/29/ElasticSearch入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">es学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-29T09:39:11+08:00">
+                2018-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一-ElasticSearch简介"><a href="#一-ElasticSearch简介" class="headerlink" title="一.ElasticSearch简介"></a>一.ElasticSearch简介</h3><p>ES是目前全文搜索引擎首选，可以快速存储、搜索和分析海量数据，维基百科、Stack Overflow、Github都采用它。ES底层是开源库Lucene，ES是Lucene的封装，提供REST API的操作接口，开箱即用。</p>
+<h3 id="二-ES安装"><a href="#二-ES安装" class="headerlink" title="二.ES安装"></a>二.ES安装</h3><p>安装较为简单，需要先安装JAVA8，通过官网下载，<a href="https://www.elastic.co/cn/downloads/elasticsearch" target="_blank" rel="noopener">下载地址</a>。解压到目录下，输入下面命令启动ES<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>如果这时候报错<span style="color:red">max virtual memory areas vm.max_map_count[65530] is too low,increase to at least[262144]，执行下面的命令</span><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -w vm.max_map_count=262144</span><br></pre></td></tr></table></figure></p>
+<p>也可以这样做<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/sysctl.conf</span><br></pre></td></tr></table></figure></p>
+<p>写入配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vm.max_map_count=655360</span><br></pre></td></tr></table></figure></p>
+<p>然后执行下面的命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -p</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>出现上述错误原因是默认情况下，ES使用mmapfs目录来存储其索引，mmap计数的默认操作系统限制可能太低，这可能导致内存不足异常.<br>启动完成，es默认运行在9200端口，执行下面命令,ES返回一个JSON对象,包含节点、集群、版本信息</p>
+</blockquote>
+<p>使用下面的命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ curl localhost:9200</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot; : &quot;atntrTf&quot;,</span><br><span class="line">  &quot;cluster_name&quot; : &quot;elasticsearch&quot;,</span><br><span class="line">  &quot;cluster_uuid&quot; : &quot;tf9250XhQ6ee4h7YI11anA&quot;,</span><br><span class="line">  &quot;version&quot; : &#123;</span><br><span class="line">    &quot;number&quot; : &quot;6.4.2&quot;,</span><br><span class="line">    &quot;build_hash&quot; : &quot;19c13d0&quot;,</span><br><span class="line">    &quot;build_date&quot; : &quot;2018-09-26T20:44:24.823Z&quot;,</span><br><span class="line">    &quot;build_snapshot&quot; : false,</span><br><span class="line">    &quot;lucene_version&quot; : &quot;7.4.0&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;tagline&quot; : &quot;You Know, for Search&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="三-基本概念"><a href="#三-基本概念" class="headerlink" title="三.基本概念"></a>三.基本概念</h3><h4 id="1-Node和Cluster"><a href="#1-Node和Cluster" class="headerlink" title="1.Node和Cluster"></a>1.Node和Cluster</h4><p>Elastic Search本身是一个分布式数据库，允许多个数据库协作，每台服务器可运行多个ES实例。单个ES实例为一个Node（节点），一组节点构成一个集群。</p>
+<h4 id="2-Index"><a href="#2-Index" class="headerlink" title="2.Index"></a>2.Index</h4><p>Elastic 会索引所有字段，经过处理后写入一个反向索引（Inverted Index）。查找数据的时候，直接查找该索引。</p>
+<p>所以，Elastic 数据管理的顶层单位就叫做 Index（索引）。它是单个数据库的同义词。每个 Index （即数据库）的名字必须是<span style="color:red">小写</span>。使用下面的命令可以查看当前节点的所有 Index。</p>
+<h4 id="3-Document"><a href="#3-Document" class="headerlink" title="3.Document"></a>3.Document</h4><p>Index 里面单条的记录称为 Document（文档）。许多条 Document 构成了一个 Index。</p>
+<p>Document 使用 JSON 格式表示，下面是一个例子。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;user&quot;: &quot;张三&quot;,</span><br><span class="line">  &quot;title&quot;: &quot;工程师&quot;,</span><br><span class="line">  &quot;desc&quot;: &quot;数据库管理&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同一个 Index 里面的 Document，不要求有相同的结构（scheme），但是最好保持相同，这样有利于提高搜索效率。</p>
+<h4 id="4-Type"><a href="#4-Type" class="headerlink" title="4.Type"></a>4.Type</h4><p>Document 可以分组，比如weather这个 Index 里面，可以按城市分组（北京和上海），也可以按气候分组（晴天和雨天）。这种分组就叫做 Type，它是虚拟的逻辑分组，用来过滤 Document。</p>
+<p>不同的 Type 应该有相似的结构（schema），举例来说，id字段不能在这个组是字符串，在另一个组是数值。这是与关系型数据库的表的一个区别。性质完全不同的数据（比如products和logs）应该存成两个 Index，而不是一个 Index 里面的两个 Type（虽然可以做到）。</p>
+<p>下面的命令可以列出每个 Index 所包含的 Type。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/_mapping?pretty=true&apos;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>根据规划，Elastic 6.x 版只允许每个 Index 包含一个 Type，7.x 版将会彻底移除 Type。</p>
+</blockquote>
+<h3 id="四-Index基本操作"><a href="#四-Index基本操作" class="headerlink" title="四.Index基本操作"></a>四.Index基本操作</h3><h4 id="1-新建Index"><a href="#1-新建Index" class="headerlink" title="1.新建Index"></a>1.新建Index</h4><p>下面的命令新建一个weather的index<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT &apos;localhost:9200/weather&apos;</span><br></pre></td></tr></table></figure></p>
+<p>执行后返回JSON对象，acknowledged字段表示操作成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;acknowledged&quot;:true,</span><br><span class="line">  &quot;shards_acknowledged&quot;:true,</span><br><span class="line">  &quot;index&quot;:&quot;weather&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时候再执行,能看到效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &apos;http://localhost:9200/_cat/indices?v&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-删除Index"><a href="#2-删除Index" class="headerlink" title="2.删除Index"></a>2.删除Index</h3><p>删除weather这个index<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X DELETE &apos;localhost:9200/weather&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="五-安装中文分词插件"><a href="#五-安装中文分词插件" class="headerlink" title="五.安装中文分词插件"></a>五.安装中文分词插件</h3><p>安装的中文分词插件是ik,详细见 <a href="https://github.com/search?q=elasticsearch-analysis-ik" target="_blank" rel="noopener">https://github.com/search?q=elasticsearch-analysis-ik</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1.download or compile</span><br><span class="line"></span><br><span class="line">optional 1 - download pre-build package from here: https://github.com/medcl/elasticsearch-analysis-ik/releases</span><br><span class="line"></span><br><span class="line">create plugin folder cd your-es-root/plugins/ &amp;&amp; mkdir ik</span><br><span class="line"></span><br><span class="line">unzip plugin to folder your-es-root/plugins/ik</span><br><span class="line"></span><br><span class="line">optional 2 - use elasticsearch-plugin to install ( supported from version v5.5.1 ):</span><br><span class="line"></span><br><span class="line">./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip</span><br><span class="line"></span><br><span class="line">2.restart elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>可以跟着github上的README.md跟着操作试一下,重启ElasticSearch,下载分词器对应自己安装的版本上去。</p>
+<p>新建一个index，基本来说中文字段,都要单独设置一下，记得指定内容类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT &apos;localhost:9200/accounts&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;person&quot;: &#123;</span><br><span class="line">      &quot;properties&quot;: &#123;</span><br><span class="line">        &quot;user&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">          &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;title&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">          &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;desc&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">          &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上述代码,新建一个名为accounts的Index，里面有一个名称为person的Type，person有三个字段</p>
+<ul>
+<li>user</li>
+<li>title</li>
+<li>desc<br>因为三个字段都是中文所以指定中文分词器,不使用默认的英文分词器</li>
+</ul>
+<p>analyzer是字段文本的分词器，search_analyzer是搜索词的分词器，ik_max_word分词器是ik插件提供，可以对文本进行最大数量的分词。</p>
+<h3 id="六-数据操作"><a href="#六-数据操作" class="headerlink" title="六.数据操作"></a>六.数据操作</h3><h4 id="1-新增记录"><a href="#1-新增记录" class="headerlink" title="1.新增记录"></a>1.新增记录</h4><p>向指定的/Index/Type发送PUT(POST)请求,向刚才新建的/accounts/person发送请求，就可以新增一条人员记录,ES 6.x比较之前必须制定Content-Type，详细见<a href="https://www.elastic.co/blog/strict-content-type-checking-for-elasticsearch-rest-requests" target="_blank" rel="noopener">地址</a>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT &apos;localhost:9200/accounts/person/1&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;user&quot;: &quot;张三&quot;,</span><br><span class="line">  &quot;title&quot;: &quot;工程师&quot;,</span><br><span class="line">  &quot;desc&quot;: &quot;数据库管理&quot;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>服务器返回的 JSON 对象，会给出 Index、Type、Id、Version 等信息。<br><span style="color:red">请求路径是/accounts/person/1,这个1就是记录的ID,也可以是字符串，如果不传入的话，请指定请求为POST请求，如下</span><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &apos;localhost:9200/accounts/person&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;user&quot;: &quot;李四&quot;,</span><br><span class="line">  &quot;title&quot;: &quot;工程师&quot;,</span><br><span class="line">  &quot;desc&quot;: &quot;系统管理&quot;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>向/accounts/person发出一个 POST 请求，添加一个记录。这时，服务器返回的 JSON 对象里面，_id字段就是一个随机字符串。</p>
+<blockquote>
+<p>注意，如果没有先创建 Index（这个例子是accounts），直接执行上面的命令，Elastic 也不会报错，而是直接生成指定的 Index。所以，打字的时候要小心，不要写错 Index 的名称。</p>
+</blockquote>
+<h4 id="2-查看记录"><a href="#2-查看记录" class="headerlink" title="2.查看记录"></a>2.查看记录</h4><p>向/Index/Type/Id发出 GET 请求，就可以查看这条记录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/1?pretty=true&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码请求查看/accounts/person/1这条记录，URL 的参数pretty=true表示以易读的格式返回。<br>返回的数据中，found字段表示查询成功，_source字段返回原始记录。<br><img src="https://user-images.githubusercontent.com/20592210/47728329-1974eb80-dc99-11e8-83b6-405a9b7e176b.png" alt=""></p>
+<p>如果ID不正确，found字段为false</p>
+<h4 id="3-删除记录"><a href="#3-删除记录" class="headerlink" title="3.删除记录"></a>3.删除记录</h4><p>删除记录就是发出 DELETE 请求。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X DELETE &apos;localhost:9200/accounts/person/1&apos;</span><br></pre></td></tr></table></figure></p>
+<p>我先执行删除，再查询，found为false<br><img src="https://user-images.githubusercontent.com/20592210/47728722-e1ba7380-dc99-11e8-85b0-4536a93f3918.png" alt="2018-10-30 23-15-51"></p>
+<p>接着我在PUT进去，虽然result是created，发现version字段为3，表示通过ID记录<br><img src="https://user-images.githubusercontent.com/20592210/47728752-f1d25300-dc99-11e8-9768-e8248a3a2168.png" alt="2018-10-30 23-16-22"></p>
+<h3 id="七-数据查询"><a href="#七-数据查询" class="headerlink" title="七.数据查询"></a>七.数据查询</h3><h4 id="1-使用-GET-方法，直接请求-Index-Type-search，就会返回所有记录。"><a href="#1-使用-GET-方法，直接请求-Index-Type-search，就会返回所有记录。" class="headerlink" title="1.使用 GET 方法，直接请求/Index/Type/_search，就会返回所有记录。"></a>1.使用 GET 方法，直接请求/Index/Type/_search，就会返回所有记录。</h4><p><img src="https://user-images.githubusercontent.com/20592210/47729171-a4a2b100-dc9a-11e8-96ca-4d25512a99c1.png" alt="2018-10-30 23-21-48"></p>
+<p>上面代码中，返回结果的 took字段表示该操作的耗时（单位为毫秒），timed_out字段表示是否超时，hits字段表示命中的记录，里面子字段的含义如下。</p>
+<ul>
+<li>total：返回记录数，本例是2条</li>
+<li>max_score：最高的匹配程度，本例是1.0。</li>
+<li>hits：返回的记录组成的数组</li>
+</ul>
+<p>返回的记录中，每条记录都有一个_score字段，表示匹配的程序，默认是按照这个字段降序排列。</p>
+<h4 id="2-全文搜索"><a href="#2-全文搜索" class="headerlink" title="2.全文搜索"></a>2.全文搜索</h4><p>ES使用自己的查询语法，使用GET请求带有数据体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/_search&apos; -H &apos;Content-Type:application/json&apos;  -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;软件&quot; &#125;&#125;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码使用 Match 查询，指定的匹配条件是desc字段里面包含”软件”这个词。返回结果如下。<br><img src="https://user-images.githubusercontent.com/20592210/47729683-9608c980-dc9b-11e8-81a8-6d96ef47bb8d.png" alt="2018-10-30 23-28-45"></p>
+<p>Elastic 默认一次返回10条结果，可以通过size字段改变这个设置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/_search&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;管理&quot; &#125;&#125;,</span><br><span class="line">  &quot;size&quot;: 1</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码指定，每次只返回一条结果。</p>
+<p>还可以通过from字段，指定位移。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/_search&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;管理&quot; &#125;&#125;,</span><br><span class="line">  &quot;from&quot;: 1,</span><br><span class="line">  &quot;size&quot;: 1</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码指定，从位置1开始（默认是从位置0开始），只返回一条结果。</p>
+<h4 id="3-逻辑运算"><a href="#3-逻辑运算" class="headerlink" title="3.逻辑运算"></a>3.逻辑运算</h4><p>如果有多个搜索关键字， Elastic 认为它们是or关系。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/_search&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;软件 系统&quot; &#125;&#125;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码搜索的是软件 or 系统。</p>
+<p>如果要执行多个关键词的and搜索，必须使用布尔 bool查询。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">curl &apos;localhost:9200/accounts/person/_search&apos; -H &apos;Content-Type:application/json&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;must&quot;: [</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;desc&quot;: &quot;软件&quot; &#125; &#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;desc&quot;: &quot;系统&quot; &#125; &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果如下图<br><img src="https://user-images.githubusercontent.com/20592210/47730091-6a3a1380-dc9c-11e8-8f4c-779f7b2b47ce.png" alt="2018-10-30 23-34-41"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/20/redis学习/" rel="next" title="Redis学习笔记">
+                <i class="fa fa-chevron-left"></i> Redis学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ggzr</p>
+              <p class="site-description motion-element" itemprop="description">一只咸鱼的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-ElasticSearch简介"><span class="nav-number">1.</span> <span class="nav-text">一.ElasticSearch简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-ES安装"><span class="nav-number">2.</span> <span class="nav-text">二.ES安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-基本概念"><span class="nav-number">3.</span> <span class="nav-text">三.基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Node和Cluster"><span class="nav-number">3.1.</span> <span class="nav-text">1.Node和Cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Index"><span class="nav-number">3.2.</span> <span class="nav-text">2.Index</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Document"><span class="nav-number">3.3.</span> <span class="nav-text">3.Document</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Type"><span class="nav-number">3.4.</span> <span class="nav-text">4.Type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-Index基本操作"><span class="nav-number">4.</span> <span class="nav-text">四.Index基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-新建Index"><span class="nav-number">4.1.</span> <span class="nav-text">1.新建Index</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-删除Index"><span class="nav-number">5.</span> <span class="nav-text">2.删除Index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-安装中文分词插件"><span class="nav-number">6.</span> <span class="nav-text">五.安装中文分词插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六-数据操作"><span class="nav-number">7.</span> <span class="nav-text">六.数据操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-新增记录"><span class="nav-number">7.1.</span> <span class="nav-text">1.新增记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-查看记录"><span class="nav-number">7.2.</span> <span class="nav-text">2.查看记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-删除记录"><span class="nav-number">7.3.</span> <span class="nav-text">3.删除记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七-数据查询"><span class="nav-number">8.</span> <span class="nav-text">七.数据查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-使用-GET-方法，直接请求-Index-Type-search，就会返回所有记录。"><span class="nav-number">8.1.</span> <span class="nav-text">1.使用 GET 方法，直接请求/Index/Type/_search，就会返回所有记录。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-全文搜索"><span class="nav-number">8.2.</span> <span class="nav-text">2.全文搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-逻辑运算"><span class="nav-number">8.3.</span> <span class="nav-text">3.逻辑运算</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ggzr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
