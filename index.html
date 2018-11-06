@@ -458,14 +458,121 @@
 
       
         
-          <h4 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h4><p>Redis是一个高性能的key-value数据库,key-value数据库是一种以键值存储的数据库，类似Java中的Map,Redis支持value类型相对同类更多，包括了string, list, set, zset(有序集合),hash等，Redis属于内存型数据库，读写操作较快。<br>同时，Redis支持数据持久化，有AOF和RDB两种实现方式。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/20/redis学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
+            <h4 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h4><p>Redis是一个高性能的key-value数据库,key-value数据库是一种以键值存储的数据库，类似Java中的Map,Redis支持value类型相对同类更多，包括了string, list, set, zset(有序集合),hash等，Redis属于内存型数据库，读写操作较快。<br>同时，Redis支持数据持久化，有AOF和RDB两种实现方式。</p>
+<h4 id="二-优势"><a href="#二-优势" class="headerlink" title="二.优势"></a>二.优势</h4><ol>
+<li>性能高 Redis的读写速度能达到10W左右</li>
+<li>原子 Redis单个操作是原子性的，多个操作也能通过MULTI和EXEC实现事务保证原子性</li>
+<li>Redis能够设置key的过期时间</li>
+<li>功能多种，能够使用Redis实现订阅发布功能和实现分布式事务</li>
+</ol>
+<h4 id="三-安装配置"><a href="#三-安装配置" class="headerlink" title="三.安装配置"></a>三.安装配置</h4><p>安装配置较为简单，略过</p>
+<h4 id="四-数据类型"><a href="#四-数据类型" class="headerlink" title="四.数据类型"></a>四.数据类型</h4><h5 id="1-字符串-Strings"><a href="#1-字符串-Strings" class="headerlink" title="1.字符串 Strings"></a>1.字符串 Strings</h5><p>字符串是Redis种最基本的value,字符串在Redis中是二进制安全的，意味着Redis字符串能包含包含任意类型的数据，比如一张图片或者一个序列化的对象，一个键最大存储512MB。</p>
+<blockquote>
+<p>什么是二进制安全？<br>简单来说二进制安全就是，字符串不会根据某种特殊的标志来解析的，无论输入的是什么，总能保证输出的是原始输入而不是根据某种特殊格式来处理</p>
+<blockquote>
+<p>比如c中strlen函数依据字符’\0’判断字符串是否结束，对于字符串str=”1234\0123”来说，strlen(str)=4, 而在redis中strlen str = 9<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//c语言</span><br><span class="line"></span><br><span class="line">str=&quot;1234\0123&quot;;</span><br><span class="line"></span><br><span class="line">strlen(str)=4</span><br><span class="line"></span><br><span class="line">//redis</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; set str 1234\0123</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; strlen str</span><br><span class="line"></span><br><span class="line">(integer) 9</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+<p>1.1 字符串可以做更多的事情，比如incr，decr,incrby,可用来做计数器(比如记录用户的访问次数)或者限速器(比如限制某个用户每日发短信的数量，设置过期时间)，在Jedis中也有封装好的RedisAtomicLong类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">45.63.85.39:7003&gt; incr incrkey</span><br><span class="line">(integer) 101</span><br><span class="line">45.63.85.39:7003&gt; decr incrkey</span><br><span class="line">(integer) 100</span><br><span class="line">45.63.85.39:7003&gt; decr incrkey</span><br><span class="line">(integer) 99</span><br><span class="line">45.63.85.39:7003&gt; incrby incrkey 5</span><br><span class="line">(integer) 104</span><br></pre></td></tr></table></figure></p>
+<p>1.2 字符串进行append操作<br>redis中append命令，java中的使用参照ValueOperatoions类里面的方法，以及更多的setrange、getrange操作</p>
+<h5 id="2-列表Lists"><a href="#2-列表Lists" class="headerlink" title="2.列表Lists"></a>2.列表Lists</h5><p>Redis列表是简单的字符串列表，按照插入顺序排序，LPUSH可以将元素插入到列表的头部，RPUSH可以将元素插入到列表的尾部，以及其他常见的BLPOP、BRPOP、LINDEX、LLEN等等，BLPOP和LPOP的区别是BLPOP移除元素时判断没有元素会进行阻塞,Java中的使用参见ListOperations类</p>
+<blockquote>
+<p>List 说白了就是链表（redis 使用双端链表实现的 List），相信学过数据结构知识的人都应该能理解其结构。使用 List 结构，我们可以轻松地实现最新消息排行等功能（比如新浪微博的 TimeLine ）。List 的另一个应用就是消息队列，可以利用 List 的 *PUSH 操作，将任务存在 List 中，然后工作线程再用 POP 操作将任务取出进行执行。Redis 还提供了操作 List 中某一段元素的 API，你可以直接查询，删除 List 中某一段的元素</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:7001&gt; LPUSH list1 a</span><br><span class="line">-&gt; Redirected to slot [7141] located at 45.63.85.39:7002</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7002&gt; RPUSH list1 b</span><br><span class="line">(integer) 2</span><br><span class="line">45.63.85.39:7002&gt; LPUSH list1 c</span><br><span class="line">(integer) 3</span><br><span class="line">45.63.85.39:7002&gt; LRANGE list1 0 10</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;b</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一个列表最多可以包含2^32-1个元素（4294967295，每个表超过40亿个元素）。</p>
+</blockquote>
+<blockquote>
+<p>从时间复杂度的角度来看，Redis列表主要的特性就是支持时间常数的 插入和靠近头尾部元素的删除，即使是需要插入上百万的条目。 访问列表两端的元素是非常快的，但如果你试着访问一个非常大 的列表的中间元素仍然是十分慢的，因为那是一个时间复杂度为 O(N) 的操作。</p>
+</blockquote>
+<h5 id="3-集合Sets"><a href="#3-集合Sets" class="headerlink" title="3. 集合Sets"></a>3. 集合Sets</h5><p>Redis集合是一个无序的字符串合集，Redis 中集合是通过哈希表实现的，你可以以O(1) 的时间复杂度（无论集合中有多少元素时间复杂度都为常量）完成 添加，删除以及测试元素是否存在的操作。类比Java中的Set，Java中使用类可参见SetOperations类。</p>
+<blockquote>
+<p>使用场景：1.共同好友、二度好友 2.利用唯一性，可以统计访问网站的所有独立 IP 3.好友推荐的时候，根据 tag 求交集，大于某个 threshold 就可以推荐<br>比如在微博应用中，可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。因为 Redis 非常人性化的为集合提供了求<span style="color:red">交集（SINTER）、并集（SUNION）、差集（SDIFF）</span>等操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">45.63.85.39:7002&gt; sadd set1 a</span><br><span class="line">-&gt; Redirected to slot [3037] located at 45.63.85.39:7001</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; sadd set1 b</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; sadd set1 c</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; sadd set1 d</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; smembers set1</span><br><span class="line">1) &quot;d&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br><span class="line">4) &quot;c&quot;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>更多的命令SCARD、SDIFF key1 <a href="给定所有集合的差集">key2</a>、SINTER返回交集、SISMEMBER判断是否是key的集合成员……</p>
+</blockquote>
+<h5 id="4-有序集合Sorted-Sets"><a href="#4-有序集合Sorted-Sets" class="headerlink" title="4.有序集合Sorted Sets"></a>4.有序集合Sorted Sets</h5><p>Redis 有序集合和集合一样也是string类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数(权重)。redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。 集合中最大的成员数为 2^32 - 1 (4294967295, 每个集合可存储40多亿个成员)。类比Java中的TreeSet，Java中的使用参照ZSetOperations类。</p>
+<blockquote>
+<p>场景：1.带有权重的元素，比如一个游戏的用户得分排行榜 2.比较复杂的数据结构，一般用到的场景不算太多<br>Sorted Sets是将 Set 中的元素增加了一个权重参数 score，使得集合中的元素能够按 score 进行有序排列，比如一个存储全班同学成绩的 Sorted Sets，其集合 value 可以是同学的学号，而 score 就可以是其考试得分，这样在数据插入集合的时候，就已经进行了天然的排序。另外还可以用 Sorted Sets 来做带权重的队列，比如普通消息的 score 为1，重要消息的 score 为2，然后工作线程可以选择按 score 的倒序来获取工作任务。让重要的任务优先执行。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//使用如下，设置权重，根据权重排序</span><br><span class="line">ZADD key socre member</span><br><span class="line">45.63.85.39:7001&gt; zadd zset1 1 a</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; zadd zset1 3 b</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; zadd zset1 2 c</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; zadd zset1 4 d</span><br><span class="line">(integer) 1</span><br><span class="line">45.63.85.39:7001&gt; zrange zset1 0 10</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;c&quot;</span><br><span class="line">3) &quot;b&quot;</span><br><span class="line">4) &quot;d&quot;</span><br><span class="line">45.63.85.39:7001&gt; zrange zset1 0 10 withscores</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;1&quot;</span><br><span class="line">3) &quot;c&quot;</span><br><span class="line">4) &quot;2&quot;</span><br><span class="line">5) &quot;b&quot;</span><br><span class="line">6) &quot;3&quot;</span><br><span class="line">7) &quot;d&quot;</span><br><span class="line">8) &quot;4&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可使用ZREVRANGE倒序查看,ZRANGE和ZRERANGE都指定的是排名范围,更新权重使用ZADD会进行覆盖之前设置的权重，ZREM对应删除成员，ZCOUNT：返回指定Sorted Set中指定score范围内的member数量，时间复杂度：O(log(N)),ZCARD：返回指定Sorted Set中的member数量，时间复杂度O(1),ZSCORE：返回指定Sorted Set中指定member的score，时间复杂度O(1),ZRANK/ZREVRANK：返回指定member在Sorted Set中的排名，ZRANK返回按升序排序的排名，ZREVRANK则返回按降序排序的排名。时间复杂度O(log(N))</p>
+</blockquote>
+<h5 id="5-哈希Hashes"><a href="#5-哈希Hashes" class="headerlink" title="5.哈希Hashes"></a>5.哈希Hashes</h5><p>Redis Hashes是字符串字段和字符串值之间的映射，所以它们是完美的表示对象（eg:一个有名，姓，年龄等属性的用户）的数据类型。对应HashOperations&lt;H, HK, HV&gt;，存取对象的多个key和value</p>
+<blockquote>
+<p>在 Memcached 中，我们经常将一些结构化的信息打包成 hashmap，在客户端序列化后存储为一个字符串的值（一般是 JSON 格式），比如用户的昵称、年龄、性别、积分等。这时候在需要修改其中某一项时，通常需要将字符串（JSON）取出来，然后进行反序列化，修改某一项的值，再序列化成字符串（JSON）存储回去。简单修改一个属性就干这么多事情，消耗必定是很大的，也不适用于一些可能并发操作的场合（比如两个并发的操作都需要修改积分）。而 Redis 的 Hash 结构可以使你像在数据库中 Update 一个属性一样只修改某一项属性值。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt;  HMSET runoobkey name &quot;redis tutorial&quot; description &quot;redis basic commands for caching&quot; likes 20 visitors 23000</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt;  HGETALL runoobkey</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;redis tutorial&quot;</span><br><span class="line">3) &quot;description&quot;</span><br><span class="line">4) &quot;redis basic commands for caching&quot;</span><br><span class="line">5) &quot;likes&quot;</span><br><span class="line">6) &quot;20&quot;</span><br><span class="line">7) &quot;visitors&quot;</span><br><span class="line">8) &quot;23000&quot;</span><br></pre></td></tr></table></figure>
+<h5 id="6-HyperLogLog"><a href="#6-HyperLogLog" class="headerlink" title="6.HyperLogLog"></a>6.HyperLogLog</h5><p>Redis HyperLogLog 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定的、并且是很小的。</p>
+<blockquote>
+<p>什么是基数?<br>比如数据集 {1, 3, 5, 7, 5, 7, 8}， 那么这个数据集的基数集为 {1, 3, 5 ,7, 8}, 基数(不重复元素)为5。 基数估计就是在误差可接受的范围内，快速计算基数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; PFADD runoobkey &quot;redis&quot;</span><br><span class="line"></span><br><span class="line">1) (integer) 1</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; PFADD runoobkey &quot;mongodb&quot;</span><br><span class="line"></span><br><span class="line">1) (integer) 1</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; PFADD runoobkey &quot;mysql&quot;</span><br><span class="line"></span><br><span class="line">1) (integer) 1</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; PFCOUNT runoobkey</span><br><span class="line"></span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>PFADD添加指定元素到HyperLogLog中，PCOUNT给定基数估算值，PFMERGE合并多个HyperLogLog</p>
+</blockquote>
+<h4 id="四-Redis主从复制以及哨兵"><a href="#四-Redis主从复制以及哨兵" class="headerlink" title="四.Redis主从复制以及哨兵"></a>四.Redis主从复制以及哨兵</h4><p>在 Redis 复制的基础上，使用和配置主从复制非常简单，能使得从 Redis 服务器（下文称 slave）能精确得复制主 Redis 服务器（下文称 master）的内容。每次当 slave 和 master 之间的连接断开时， slave 会自动重连到 master 上，并且无论这期间 master 发生了什么， slave 都将尝试让自身成为 master 的精确副本。</p>
+<p>这个系统的运行依靠三个主要的机制：</p>
+<ul>
+<li><p>当一个 master 实例和一个 slave 实例连接正常时， master 会发送一连串的命令流来保持对 slave 的更新，以便于将自身数据集的改变复制给 slave ， ：包括客户端的写入、key 的过期或被逐出等等。</p>
+</li>
+<li><p>当 master 和 slave 之间的连接断开之后，因为网络问题、或者是主从意识到连接超时， slave 重新连接上 master 并会尝试进行部分重同步：这意味着它会尝试只获取在断开连接期间内丢失的命令流(获取增量)。</p>
+</li>
+<li><p>当无法进行部分重同步时， slave 会请求进行全量重同步。这会涉及到一个更复杂的过程，例如 master 需要创建所有数据的快照，将之发送给 slave ，之后在数据集更改时持续发送命令流到 slave 。</p>
+</li>
+</ul>
+<p>Redis默认是异步复制,特点是高延迟和高性能，同时一个master可以有多个slave,自Redis4.0起sub-slave将会从master收到一样的复制流。master侧非阻塞，可以使用复制来避免对master进行磁盘备份的开销，master的redis.conf避免进行磁盘持久化，连接一个slave，配置定期保存RDB或者启动AOF.<span style="color:red">注意考虑到如果对master重新启动,将会从空数据集开始，如果一个slave尝试与他同步，slave会被清空,建议在master和slave中都启动持久化。</span></p>
+<blockquote>
+<p>我们设置节点 A 为 master 并关闭它的持久化设置，节点 B 和 C 从 节点 A 复制数据。<br>节点 A 崩溃，但是他有一些自动重启的系统可以重启进程。但是由于持久化被关闭了，节点重启后其数据集合为空。</p>
+</blockquote>
+<blockquote>
+<p>节点 B 和 节点 C 会从节点 A 复制数据，但是节点 A 的数据集是空的，因此复制的结果是它们会销毁自身之前的数据副本。当 Redis Sentinel 被用于高可用并且 master 关闭持久化，这时如果允许自动重启进程也是很危险的。例如， master 可以重启的足够快以致于 Sentinel 没有探测到故障，因此上述的故障模式也会发生。</p>
+</blockquote>
+<p><span style="color:red">任何时候数据安全性都是很重要的，所以如果 master 使用复制功能的同时未配置持久化，那么自动重启进程这项应该被禁用。</span></p>
+<p>Redis的复制功能依靠replication id和offset实现，replicationid是一个较大的伪随机字符串，offset记录master的偏移量，master将自己产生的复制流发送给slave的时候,发送多少个字节的数据,自身的偏移量就会增机多少，目的是有新的操作的时候可以更新slave的状态</p>
+<p>配置slave只需要修改redis.conf的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">slaveof ip:port</span><br><span class="line">//如果master配置了密码，在redis-cli中输入</span><br><span class="line">config set masterauth &lt;password&gt;</span><br><span class="line">//永久生效添加到配置文件</span><br><span class="line">masterauth &lt;password&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Redis复制处理master中的key过期问题</p>
+<ol>
+<li>slave不会让key过期，master中key过期之后，会合成一个DEL命令传输到所有的slave</li>
+<li>若master无法及时提供DEL命令，slave中仍然可能存在逻辑上过期的key-value，为了处理这个问题，slave 使用它的逻辑时钟以报告只有在不违反数据集的一致性的读取操作（从主机的新命令到达）中才存在 key</li>
+<li>在Lua脚本执行期间，不执行任何 key 过期操作。当一个Lua脚本运行时，从概念上讲，master 中的时间是被冻结的，这样脚本运行的时候，一个给定的键要么存在要么不存在。这可以防止 key 在脚本中间过期，保证将相同的脚本发送到 slave ，从而在二者的数据集中产生相同的效果。</li>
+</ol>
+<blockquote>
+<p>Sentinel（哨兵）是Redis 的高可用性解决方案：由一个或多个Sentinel 实例 组成的Sentinel 系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在被监视的主服务器进入下线状态时，自动将下线主服务器属下的某个从服务器升级为新的主服务器。</p>
+</blockquote>
+<blockquote>
+<p>作用：<br>A、Master 状态监测<br>B、如果Master 异常，则会进行Master-slave 转换，将其中一个Slave作为Master，将之前的Master作为Slave<br>C、Master-Slave切换后，master_redis.conf、slave_redis.conf和sentinel.conf的内容都会发生改变，即master_redis.conf中会多一行slaveof的配置，sentinel.conf的监控目标会随之调换</p>
+</blockquote>
+<p>工作方式：</p>
+<blockquote>
+<p>1.每个Sentinel每秒钟向他所知的master、slave以及其他Sentinel发送PING命令</p>
+<p>2.如果有一个实例距离上一次有效回复的时间超过配置时间，则被标记为主观下线状态</p>
+<p>3.如果是一个master被标记为主观下线，则所有监视该master的sentinel要以每秒一次的频率确认master进入主观下线状态</p>
+<p>4.当确认他下线的数量的sentinel大于配置的值，master改变状态为客观下线</p>
+<p>5.一般情况下，sentinel为每间隔10秒向他所有已知的master和slave发送info命令，某master被标记为下线时，sentinel向该下线master的slave发送info的频率变为1秒一次</p>
+<p>6.如果没有足够的sentinel同意master下线，master的客观下线状态会被移除</p>
+<p>7.如果master回复sentinel的ping命令，主观下线状态被移除</p>
+</blockquote>
+<h4 id="五-Redis集群概念以及部署"><a href="#五-Redis集群概念以及部署" class="headerlink" title="五.Redis集群概念以及部署"></a>五.Redis集群概念以及部署</h4><p>Redis集群是一个提供在多个Redis间节点共享数据的程序集，集群通过分区来提供一定程度的可用性，在集群某个节点宕机的时或者不可达的时候继续处理命令。</p>
+<p>搭建Redis集群</p>
+<h5 id="1-下载安装Redis"><a href="#1-下载安装Redis" class="headerlink" title="1.下载安装Redis"></a>1.下载安装Redis</h5><p>目前最新版本Redis5.0.0，<a href="http://download.redis.io/releases/redis-5.0.0.tar.gz" target="_blank" rel="noopener">下载地址</a><br>先解压到指定目录，并编译<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zvxf redis-5.0.0.tar.gz</span><br><span class="line">cd redis-5.0.0</span><br><span class="line">make</span><br><span class="line">cd redis-5.0.0/src</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-修改默认的redis-conf配置文件"><a href="#2-修改默认的redis-conf配置文件" class="headerlink" title="2.修改默认的redis.conf配置文件"></a>2.修改默认的redis.conf配置文件</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">port 7001</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file nodes-7001.conf</span><br><span class="line"></span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">appendonly yes</span><br><span class="line">pidfile /var/run/redis_7001.pid</span><br><span class="line">#bind 127.0.0.1 禁用</span><br><span class="line">protected-mode no</span><br><span class="line">dbfilename dump-7001.rdb</span><br><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly_7001.aof&quot;</span><br><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>文件中的 cluster-enabled 选项用于开实例的集群模式， 而 cluster-conf-file 选项则设定了保存节点配置文件的路径， 默认值为 nodes.conf.节点配置文件无须人为修改， 它由 Redis 集群在启动时创建， 并在有需要时自动进行更新。</p>
+</blockquote>
+<p><span style="color:red">要让集群正常运作至少需要三个主节点，不过在刚开始试用集群功能时， 强烈建议使用六个节点： 其中三个为主节点， 而其余三个则是各个主节点的从节点。</span></p>
+<h5 id="3-创建集群目录"><a href="#3-创建集群目录" class="headerlink" title="3.创建集群目录"></a>3.创建集群目录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir cluster-test</span><br><span class="line">cd cluster-test</span><br><span class="line">mkdir 7001 7002 7003 7004 7005 7006</span><br></pre></td></tr></table></figure>
+<p>在7000-7005每个文件夹下拷贝这份redis.conf文件，修改7001为7002(7003)等,使用redis-server启动每个redis<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server ./7001/redis.conf</span><br></pre></td></tr></table></figure></p>
+<p>因为nodes.conf不存在，每个节点都会有一个新的ID</p>
+<h5 id="4-创建启动集群"><a href="#4-创建启动集群" class="headerlink" title="4.创建启动集群"></a>4.创建启动集群</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#版本现在高了不建议redis-trib.rb</span><br><span class="line">redis-cli --cluster create 45.63.85.39:7001 45.63.85.39:7002 45.63.85.39:7003 45.63.85.39:7004 45.63.85.39:7005 45.63.85.39:7006 --cluster-replicas 1</span><br><span class="line"></span><br><span class="line">#指定一主一从</span><br><span class="line"></span><br><span class="line"># -c Enable cluster mode (follow -ASK and -MOVED redirections).</span><br><span class="line"></span><br><span class="line">redis-cli -p 7001 -c</span><br><span class="line"></span><br><span class="line">#使用cluster nodes查看集群情况</span><br><span class="line">3631442f5a5dcd2f24c84bc3f3e67270b7b45e4f 45.63.85.39:7003@17003 master - 0 1540719800000 3 connected 10923-16383</span><br><span class="line">eb6877f131124f31da5d9136b5a6231edcea5100 45.63.85.39:7002@17002 myself,master - 0 1540719799000 2 connected 5461-10922</span><br><span class="line">ddf070007433dfcfe6e65c618c13497169a81f95 45.63.85.39:7001@17001 master - 0 1540719801000 1 connected 0-5460</span><br><span class="line">e6187dfecffbe1571a3c6fcdb9c36c354ea43e4e 45.63.85.39:7004@17004 slave 3631442f5a5dcd2f24c84bc3f3e67270b7b45e4f 0 1540719800000 4 connected</span><br><span class="line">886ac7100a084a227af740628628321a8e4efe67 45.63.85.39:7006@17006 slave eb6877f131124f31da5d9136b5a6231edcea5100 0 1540719802771 6 connected</span><br><span class="line">7dc02a38cd96d08cd3180af0894ab850c0116554 45.63.85.39:7005@17005 slave ddf070007433dfcfe6e65c618c13497169a81f95 0 1540719802000 5 connected</span><br></pre></td></tr></table></figure>
+<p>Redis集群中的数据分片，Redis集群中的哈希槽概念<br>Redis集群中有16384个哈希槽，每个key通过CRC16校验后对16384取模来决定放在哪一个槽中，每个节点负责一部分hash槽，比如集群中有是三个节点，就像上面前三行每行最后的内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10923-16383</span><br><span class="line">5461-10922</span><br><span class="line">0-5460</span><br></pre></td></tr></table></figure></p>
+<p>这种结构比较容易添加或者删除节点，如果要增加节点，使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster help  可以看到add-node增加节点，根据提示可增加节点，del-node删除节点之前必须reshard分配自己的槽分配到其他节点上</span><br><span class="line"></span><br><span class="line">redis-cli --cluster shard 重新分配hash槽，删除之前先重新分配，增加之后重新分配</span><br></pre></td></tr></table></figure></p>
+<h5 id="5-其他情况"><a href="#5-其他情况" class="headerlink" title="5.其他情况"></a>5.其他情况</h5><p>1.如果某个主节点宕机，会在指定cluster-node-timeout时间内没收到响应选举从节点为主节点</p>
+
+          
         
       
     </div>
