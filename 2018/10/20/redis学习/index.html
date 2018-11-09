@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="一、简介Redis是一个高性能的key-value数据库,key-value数据库是一种以键值存储的数据库，类似Java中的Map,Redis支持value类型相对同类更多，包括了string, list, set, zset(有序集合),hash等，Redis属于内存型数据库，读写操作较快。同时，Redis支持数据持久化，有AOF和RDB两种实现方式。 二.优势 性能高 Redis的读写速度能达">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-06T14:05:54.540Z">
+<meta property="og:updated_time" content="2018-11-09T14:53:02.848Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis学习笔记">
 <meta name="twitter:description" content="一、简介Redis是一个高性能的key-value数据库,key-value数据库是一种以键值存储的数据库，类似Java中的Map,Redis支持value类型相对同类更多，包括了string, list, set, zset(有序集合),hash等，Redis属于内存型数据库，读写操作较快。同时，Redis支持数据持久化，有AOF和RDB两种实现方式。 二.优势 性能高 Redis的读写速度能达">
@@ -335,16 +335,16 @@
 <li>性能高 Redis的读写速度能达到10W左右</li>
 <li>原子 Redis单个操作是原子性的，多个操作也能通过MULTI和EXEC实现事务保证原子性</li>
 <li>Redis能够设置key的过期时间</li>
-<li>功能多种，能够使用Redis实现订阅发布功能和实现分布式事务</li>
-</ol>
-<h4 id="三-安装配置"><a href="#三-安装配置" class="headerlink" title="三.安装配置"></a>三.安装配置</h4><p>安装配置较为简单，略过</p>
-<h4 id="四-数据类型"><a href="#四-数据类型" class="headerlink" title="四.数据类型"></a>四.数据类型</h4><h5 id="1-字符串-Strings"><a href="#1-字符串-Strings" class="headerlink" title="1.字符串 Strings"></a>1.字符串 Strings</h5><p>字符串是Redis种最基本的value,字符串在Redis中是二进制安全的，意味着Redis字符串能包含包含任意类型的数据，比如一张图片或者一个序列化的对象，一个键最大存储512MB。</p>
-<blockquote>
+<li>功能多种，能够使用Redis实现订阅发布功能和实现分布式事务<a id="more"></a>
+<h4 id="三-安装配置"><a href="#三-安装配置" class="headerlink" title="三.安装配置"></a>三.安装配置</h4>安装配置较为简单，略过<h4 id="四-数据类型"><a href="#四-数据类型" class="headerlink" title="四.数据类型"></a>四.数据类型</h4><h5 id="1-字符串-Strings"><a href="#1-字符串-Strings" class="headerlink" title="1.字符串 Strings"></a>1.字符串 Strings</h5>字符串是Redis种最基本的value,字符串在Redis中是二进制安全的，意味着Redis字符串能包含包含任意类型的数据，比如一张图片或者一个序列化的对象，一个键最大存储512MB。<blockquote>
 <p>什么是二进制安全？<br>简单来说二进制安全就是，字符串不会根据某种特殊的标志来解析的，无论输入的是什么，总能保证输出的是原始输入而不是根据某种特殊格式来处理</p>
 <blockquote>
-<p>比如c中strlen函数依据字符’\0’判断字符串是否结束，对于字符串str=”1234\0123”来说，strlen(str)=4, 而在redis中strlen str = 9<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//c语言</span><br><span class="line"></span><br><span class="line">str=&quot;1234\0123&quot;;</span><br><span class="line"></span><br><span class="line">strlen(str)=4</span><br><span class="line"></span><br><span class="line">//redis</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; set str 1234\0123</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; strlen str</span><br><span class="line"></span><br><span class="line">(integer) 9</span><br></pre></td></tr></table></figure></p>
+<p>比如c中strlen函数依据字符’\0’判断字符串是否结束，对于字符串str=”1234\0123”来说，strlen(str)=4, 而在redis中strlen str = 9</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//c语言</span><br><span class="line"></span><br><span class="line">str=&quot;1234\0123&quot;;</span><br><span class="line"></span><br><span class="line">strlen(str)=4</span><br><span class="line"></span><br><span class="line">//redis</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; set str 1234\0123</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; strlen str</span><br><span class="line"></span><br><span class="line">(integer) 9</span><br></pre></td></tr></table></figure>
 </blockquote>
 </blockquote>
+</li>
+</ol>
 <p>1.1 字符串可以做更多的事情，比如incr，decr,incrby,可用来做计数器(比如记录用户的访问次数)或者限速器(比如限制某个用户每日发短信的数量，设置过期时间)，在Jedis中也有封装好的RedisAtomicLong类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">45.63.85.39:7003&gt; incr incrkey</span><br><span class="line">(integer) 101</span><br><span class="line">45.63.85.39:7003&gt; decr incrkey</span><br><span class="line">(integer) 100</span><br><span class="line">45.63.85.39:7003&gt; decr incrkey</span><br><span class="line">(integer) 99</span><br><span class="line">45.63.85.39:7003&gt; incrby incrkey 5</span><br><span class="line">(integer) 104</span><br></pre></td></tr></table></figure></p>
 <p>1.2 字符串进行append操作<br>redis中append命令，java中的使用参照ValueOperatoions类里面的方法，以及更多的setrange、getrange操作</p>
 <h5 id="2-列表Lists"><a href="#2-列表Lists" class="headerlink" title="2.列表Lists"></a>2.列表Lists</h5><p>Redis列表是简单的字符串列表，按照插入顺序排序，LPUSH可以将元素插入到列表的头部，RPUSH可以将元素插入到列表的尾部，以及其他常见的BLPOP、BRPOP、LINDEX、LLEN等等，BLPOP和LPOP的区别是BLPOP移除元素时判断没有元素会进行阻塞,Java中的使用参见ListOperations类</p>
