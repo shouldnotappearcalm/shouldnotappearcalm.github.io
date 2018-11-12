@@ -660,7 +660,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/04/docker入门/" itemprop="url">docker入门(一)</a></h1>
+                <a class="post-title-link" href="/2018/10/04/docker入门/" itemprop="url">Docker入门使用</a></h1>
         
 
         <div class="post-meta">
@@ -713,27 +713,6 @@
         
           <h2 id="Docker介绍"><a href="#Docker介绍" class="headerlink" title="Docker介绍"></a>Docker介绍</h2><p>Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期</p>
 <p>看下Docker架构图<br><img src="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg" alt="docker"></p>
-<p>Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 </p>
-<p>Docker Client—Docker客户端接受用户命令和配置标识，与Docker daemon通信，比如图中接受docker pull，docker build等命。</p>
-<p>Images—Docker镜像是一个只读模板，用于创建容器，好比我们的iso文件安装虚拟机。</p>
-<p>Container—容器是镜像运行的实例，镜像和容器就好象类和实例一样。</p>
-<p>Registry—Docker Registry是一个集中存储和分发镜像的服务，构建完Docker镜像之后想在其他机器与性，需要手动复制，但是有了Docker Registry就可以避免复制，类似Maven仓库，官方有Docker Hub，也可以自己搭建私有Registry。</p>
-<h2 id="VM和Docker的区别"><a href="#VM和Docker的区别" class="headerlink" title="VM和Docker的区别"></a>VM和Docker的区别</h2><blockquote>
-<p>虚拟机：虚拟机模拟整台机器包括硬件，虚拟机需要自己的操作系统，虚拟机开启分配给他的资源全部被他占用，每个虚拟机包括应用和必要的二进制库，以及一个操作系统。<br>Docker：容器技术和宿主机共享操作系统和硬件资源实现资源动态分配。</p>
-</blockquote>
-<p>首先来看看VM和Docker的架构图<br><img src="https://user-images.githubusercontent.com/20592210/48314260-0c91b980-e602-11e8-9fe3-17eb99c15bc1.png" alt="vm"><br>vm与docker框架，直观上来讲vm多了一层guest OS，同时Hypervisor会对硬件资源进行虚拟化（Hypervisor会带来性能消耗），docker直接使用硬件资源，所以资源利用率相对docker低也是比较容易理解的。</p>
-<p>用个类比来简单说明一下</p>
-<p>1.物理机是这样的<br><img src="https://user-images.githubusercontent.com/20592210/48315190-06093f00-e60e-11e8-989d-ad5df381111e.jpg" alt="default"></p>
-<p>2.虚拟机是这样的<br><img src="https://user-images.githubusercontent.com/20592210/48315290-3a312f80-e60f-11e8-8d98-9f444bbbddcf.jpg" alt="default"></p>
-<p>3、容器是这样的<br><img src="https://user-images.githubusercontent.com/20592210/48315302-63ea5680-e60f-11e8-9516-3beaab6cb4c1.jpg" alt="default"></p>
-<blockquote>
-<p>对比</p>
-<p>1.docker启动属于秒级，虚拟机通常需要几分钟。Docker的快速迭代性，决定无论开发、测试、部署都可以节约大量时间。 <br><br>2.docker需要的资源少，docker容器和内核交互，几乎没什么性能消耗，性能肯定比通过Hypervisor与内核交互的虚拟机。 <br><br>3.docker更加轻量级，因为容器共用一个内核和共享应用程序库，所占内存小，同样硬件情况下，运行的Docker容器数量远多于虚拟机数量。 <br><br>4.docker属于进程间的隔离，虚拟机可以实现系统级别的隔离，所以隔离性不如虚拟机。 <br><br>5.docker的租户root跟宿主级root等同，一旦容器内用户从普通用户提升为root，它就直接具备宿主级root权限，可以随意操作，虚拟机的root和宿主级root完全隔离，而容器目前至今还没任何形式的硬件隔离，所以容器的安全性弱于虚拟机。 <br><br>6.交付部署方面，虚通机通过镜像实现环境交付的一致性，但是镜像分发无法体系化，Docker在Dockerfile记录容器构建过程，可以在集群中实现快速分发和部署。</p>
-</blockquote>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li>docker image：docker镜像，其中包含有需要运行的文件，镜像用来创建container，一个镜像可以创建成多个container，镜像就像我们下载的iso文件一样，镜像可以在docker hub上下载或者使用docker pull</li>
-<li>docker container：容器是docker的运行组件，run一个镜像就是启动了一个新的容器，启动以前的容器用start，容器是一个隔离环境，多个容器之间互不影响。</li>
-<li>docker hub：共享和管理docker镜像，用户可以把自己的diy自己的容器打包成image并且上传到docker hub上。<a href="https://registry.hub.docker.com/。" target="_blank" rel="noopener">https://registry.hub.docker.com/。</a>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/10/04/docker入门/#more" rel="contents">

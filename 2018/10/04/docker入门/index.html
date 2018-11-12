@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
+<meta name="description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图">
 <meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker入门(一)">
+<meta property="og:title" content="Docker入门使用">
 <meta property="og:url" content="http://losergzr.cn/2018/10/04/docker入门/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
+<meta property="og:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48314260-0c91b980-e602-11e8-9fe3-17eb99c15bc1.png">
@@ -95,10 +95,10 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48350937-a2d9e400-e6c3-11e8-8ba4-9d1180bb2135.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48353505-8a20fc80-e6ca-11e8-872a-4f635c2f4f5c.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48354369-7e363a00-e6cc-11e8-8b21-68d4b6bfc0e4.png">
-<meta property="og:updated_time" content="2018-11-12T14:49:25.824Z">
+<meta property="og:updated_time" content="2018-11-12T14:52:41.717Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="docker入门(一)">
-<meta name="twitter:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
+<meta name="twitter:title" content="Docker入门使用">
+<meta name="twitter:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg">
 
 
@@ -135,7 +135,7 @@
 
 
 
-  <title>docker入门(一) | losergzr's blog</title>
+  <title>Docker入门使用 | losergzr's blog</title>
   
 
 
@@ -289,7 +289,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">docker入门(一)</h1>
+          <h1 class="post-title" itemprop="name headline">Docker入门使用</h1>
         
 
         <div class="post-meta">
@@ -341,6 +341,7 @@
       
         <h2 id="Docker介绍"><a href="#Docker介绍" class="headerlink" title="Docker介绍"></a>Docker介绍</h2><p>Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期</p>
 <p>看下Docker架构图<br><img src="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg" alt="docker"></p>
+<a id="more"></a>
 <p>Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 </p>
 <p>Docker Client—Docker客户端接受用户命令和配置标识，与Docker daemon通信，比如图中接受docker pull，docker build等命。</p>
 <p>Images—Docker镜像是一个只读模板，用于创建容器，好比我们的iso文件安装虚拟机。</p>
@@ -361,7 +362,7 @@
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
 <li>docker image：docker镜像，其中包含有需要运行的文件，镜像用来创建container，一个镜像可以创建成多个container，镜像就像我们下载的iso文件一样，镜像可以在docker hub上下载或者使用docker pull</li>
 <li>docker container：容器是docker的运行组件，run一个镜像就是启动了一个新的容器，启动以前的容器用start，容器是一个隔离环境，多个容器之间互不影响。</li>
-<li>docker hub：共享和管理docker镜像，用户可以把自己的diy自己的容器打包成image并且上传到docker hub上。<a href="https://registry.hub.docker.com/。" target="_blank" rel="noopener">https://registry.hub.docker.com/。</a><a id="more"></a>
+<li>docker hub：共享和管理docker镜像，用户可以把自己的diy自己的容器打包成image并且上传到docker hub上。<a href="https://registry.hub.docker.com/。" target="_blank" rel="noopener">https://registry.hub.docker.com/。</a><!-- more -->
 </li>
 </ul>
 <h2 id="安装和使用docker"><a href="#安装和使用docker" class="headerlink" title="安装和使用docker"></a>安装和使用docker</h2><p>对应到不同的平台安装过程不太一样，lz使用arch系使用yaourt安装，使用systemctl start 来启动Docker Daemon</p>
