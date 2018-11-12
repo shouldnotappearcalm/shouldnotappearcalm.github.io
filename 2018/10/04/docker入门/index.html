@@ -79,23 +79,26 @@
 
 
 
-<meta name="description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期。 \  \看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 \Docker Client">
+<meta name="description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
 <meta name="keywords" content="docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker入门(一)">
 <meta property="og:url" content="http://losergzr.cn/2018/10/04/docker入门/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期。 \  \看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 \Docker Client">
+<meta property="og:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48314260-0c91b980-e602-11e8-9fe3-17eb99c15bc1.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48315190-06093f00-e60e-11e8-989d-ad5df381111e.jpg">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48315290-3a312f80-e60f-11e8-8d98-9f444bbbddcf.jpg">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48315302-63ea5680-e60f-11e8-9516-3beaab6cb4c1.jpg">
-<meta property="og:updated_time" content="2018-11-11T16:51:32.031Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48350937-a2d9e400-e6c3-11e8-8ba4-9d1180bb2135.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48353505-8a20fc80-e6ca-11e8-872a-4f635c2f4f5c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/48354369-7e363a00-e6cc-11e8-8b21-68d4b6bfc0e4.png">
+<meta property="og:updated_time" content="2018-11-12T14:49:25.824Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker入门(一)">
-<meta name="twitter:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期。 \  \看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 \Docker Client">
+<meta name="twitter:description" content="Docker介绍Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期 看下Docker架构图 Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。  Docker Client—Dock">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg">
 
 
@@ -336,9 +339,13 @@
       
 
       
-        <h2 id="Docker介绍"><a href="#Docker介绍" class="headerlink" title="Docker介绍"></a>Docker介绍</h2><p>Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期。 \ </p>
-<p>\<br>看下Docker架构图<br><img src="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg" alt="docker"></p>
-<p>Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 \<br>Docker Client—Docker客户端接受用户命令和配置标识，与Docker daemon通信，比如图中接受docker pull，docker build等命令 \<br>Images—Docker镜像是一个只读模板，用于创建容器，好比我们的iso文件安装虚拟机。 \<br>Container—容器是镜像运行的实例，镜像和容器就好象类和实例一样。<br>Registry—Docker Registry是一个集中存储和分发镜像的服务，构建完Docker镜像之后想在其他机器与性，需要手动复制，但是有了Docker Registry就可以避免复制，类似Maven仓库，官方有Docker Hub，也可以自己搭建私有Registry。</p>
+        <h2 id="Docker介绍"><a href="#Docker介绍" class="headerlink" title="Docker介绍"></a>Docker介绍</h2><p>Docker是一个开源的容器引擎，它有助于快速交付应用，Docker可将应用程序和基础设施层隔离，使用Docker能够快速打包测试以及部署应用程序，缩短编写到部署运行代码的周期</p>
+<p>看下Docker架构图<br><img src="https://user-images.githubusercontent.com/20592210/48315582-fd673780-e612-11e8-8dfa-ae9161cac494.jpg" alt="docker"></p>
+<p>Docker Damemon—Docker守护进程，Docker daemon运行在宿主级的后台进程，通过Docker client与之通信。 </p>
+<p>Docker Client—Docker客户端接受用户命令和配置标识，与Docker daemon通信，比如图中接受docker pull，docker build等命。</p>
+<p>Images—Docker镜像是一个只读模板，用于创建容器，好比我们的iso文件安装虚拟机。</p>
+<p>Container—容器是镜像运行的实例，镜像和容器就好象类和实例一样。</p>
+<p>Registry—Docker Registry是一个集中存储和分发镜像的服务，构建完Docker镜像之后想在其他机器与性，需要手动复制，但是有了Docker Registry就可以避免复制，类似Maven仓库，官方有Docker Hub，也可以自己搭建私有Registry。</p>
 <h2 id="VM和Docker的区别"><a href="#VM和Docker的区别" class="headerlink" title="VM和Docker的区别"></a>VM和Docker的区别</h2><blockquote>
 <p>虚拟机：虚拟机模拟整台机器包括硬件，虚拟机需要自己的操作系统，虚拟机开启分配给他的资源全部被他占用，每个虚拟机包括应用和必要的二进制库，以及一个操作系统。<br>Docker：容器技术和宿主机共享操作系统和硬件资源实现资源动态分配。</p>
 </blockquote>
@@ -349,7 +356,7 @@
 <p>3、容器是这样的<br><img src="https://user-images.githubusercontent.com/20592210/48315302-63ea5680-e60f-11e8-9516-3beaab6cb4c1.jpg" alt="default"></p>
 <blockquote>
 <p>对比</p>
-<p>1.docker启动属于秒级，虚拟机通常需要几分钟。Docker的快速迭代性，决定无论开发、测试、部署都可以节约大量时间。 \<br>2.docker需要的资源少，docker容器和内核交互，几乎没什么性能消耗，性能肯定比通过Hypervisor与内核交互的虚拟机。\<br>3.docker更加轻量级，因为容器共用一个内核和共享应用程序库，所占内存小，同样硬件情况下，运行的Docker容器数量远多于虚拟机数量。 \<br>4.docker属于进程间的隔离，虚拟机可以实现系统级别的隔离，所以隔离性不如虚拟机。 \<br>5.docker的租户root跟宿主级root等同，一旦容器内用户从普通用户提升为root，它就直接具备宿主级root权限，可以随意操作，虚拟机的root和宿主级root完全隔离，而容器目前至今还没任何形式的硬件隔离，所以容器的安全性弱于虚拟机。 \<br>6.交付部署方面，虚通机通过镜像实现环境交付的一致性，但是镜像分发无法体系化，Docker在Dockerfile记录容器构建过程，可以在集群中实现快速分发和部署。</p>
+<p>1.docker启动属于秒级，虚拟机通常需要几分钟。Docker的快速迭代性，决定无论开发、测试、部署都可以节约大量时间。 <br><br>2.docker需要的资源少，docker容器和内核交互，几乎没什么性能消耗，性能肯定比通过Hypervisor与内核交互的虚拟机。 <br><br>3.docker更加轻量级，因为容器共用一个内核和共享应用程序库，所占内存小，同样硬件情况下，运行的Docker容器数量远多于虚拟机数量。 <br><br>4.docker属于进程间的隔离，虚拟机可以实现系统级别的隔离，所以隔离性不如虚拟机。 <br><br>5.docker的租户root跟宿主级root等同，一旦容器内用户从普通用户提升为root，它就直接具备宿主级root权限，可以随意操作，虚拟机的root和宿主级root完全隔离，而容器目前至今还没任何形式的硬件隔离，所以容器的安全性弱于虚拟机。 <br><br>6.交付部署方面，虚通机通过镜像实现环境交付的一致性，但是镜像分发无法体系化，Docker在Dockerfile记录容器构建过程，可以在集群中实现快速分发和部署。</p>
 </blockquote>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
 <li>docker image：docker镜像，其中包含有需要运行的文件，镜像用来创建container，一个镜像可以创建成多个container，镜像就像我们下载的iso文件一样，镜像可以在docker hub上下载或者使用docker pull</li>
@@ -358,8 +365,12 @@
 </li>
 </ul>
 <h2 id="安装和使用docker"><a href="#安装和使用docker" class="headerlink" title="安装和使用docker"></a>安装和使用docker</h2><p>对应到不同的平台安装过程不太一样，lz使用arch系使用yaourt安装，使用systemctl start 来启动Docker Daemon</p>
+<h2 id="常见命令使用"><a href="#常见命令使用" class="headerlink" title="常见命令使用"></a>常见命令使用</h2><p>1.搜索docker registry（默认DockerHub）中的镜像，查询结果中第一列为镜像名字，二三列标识是否未官方镜像。<br><img src="https://user-images.githubusercontent.com/20592210/48350937-a2d9e400-e6c3-11e8-8ba4-9d1180bb2135.png" alt="search"> <br><br>2.拉去镜像仓库的镜像到本地,不指定标签拉去最新的latest，就像我们maven仓库的jar包版本一样 <br><br>配置镜像加速，配置 /etc/docker/daemon.json文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/48353505-8a20fc80-e6ca-11e8-872a-4f635c2f4f5c.png" alt="2018-11-12 22-29-50"><br>3.启动postgres容器 <br><br>使用如下命令我们就能启动一个postgres容器,并且指定数据库密码，指定暴露给宿主记得端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres</span><br></pre></td></tr></table></figure>
+<p>4.查看启动的容器，-a参数查看所有的容器<br><img src="https://user-images.githubusercontent.com/20592210/48354369-7e363a00-e6cc-11e8-8b21-68d4b6bfc0e4.png" alt="docker ps"><br>5.进入一个启动的容器，使用容器ID或者容器的名称<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -ti 1d58db94039f /bin/bash</span><br></pre></td></tr></table></figure></p>
+<p>常见命令列表</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker pull image_name:tag (docker pull hello-world 拉取最新的) 拉取最新docker镜像的命令</span><br><span class="line">docker image ls 查看自己拉取的镜像（或者docker images）</span><br><span class="line">docker docker image rm image_name:tag 删除镜像 或者 docker image rm image_id （可以将image rm替换为rmi）</span><br><span class="line">docker run hello-world 启动helloworld这个容器</span><br><span class="line">docker ps 查看有哪些正常运行的容器 docker ps -a查看所有的容器</span><br><span class="line">docker start、stop、restart都比较套路，后面直接接上ps显示的container_id</span><br><span class="line">docker exec -ti container_id /bin/bash 进入容器</span><br><span class="line">docker rm container_id 删除容器</span><br></pre></td></tr></table></figure>
-
       
     </div>
     
@@ -524,7 +535,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker介绍"><span class="nav-number">1.</span> <span class="nav-text">Docker介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VM和Docker的区别"><span class="nav-number">2.</span> <span class="nav-text">VM和Docker的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">3.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装和使用docker"><span class="nav-number">4.</span> <span class="nav-text">安装和使用docker</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker介绍"><span class="nav-number">1.</span> <span class="nav-text">Docker介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VM和Docker的区别"><span class="nav-number">2.</span> <span class="nav-text">VM和Docker的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">3.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装和使用docker"><span class="nav-number">4.</span> <span class="nav-text">安装和使用docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见命令使用"><span class="nav-number">5.</span> <span class="nav-text">常见命令使用</span></a></li></ol></div>
             
 
           </div>
