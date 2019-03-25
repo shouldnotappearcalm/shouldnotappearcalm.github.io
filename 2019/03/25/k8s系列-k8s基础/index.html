@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s系列-k8s基础">
+<meta property="og:url" content="http://losergzr.cn/2019/03/25/k8s系列-k8s基础/index.html">
+<meta property="og:site_name" content="losergzr&#39;s blog">
+<meta property="og:description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/borg.png">
+<meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/architecture.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/54933568-d8d38280-4f57-11e9-9fb9-2820e35ecd56.png">
+<meta property="og:updated_time" content="2019-03-25T16:59:06.430Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s系列-k8s基础">
+<meta name="twitter:description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
+<meta name="twitter:image" content="https://jimmysong.io/kubernetes-handbook/images/borg.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://losergzr.cn/2019/03/25/k8s系列-k8s基础/"/>
+
+
+
+
+
+  <title>k8s系列-k8s基础 | losergzr's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">losergzr's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/03/25/k8s系列-k8s基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">k8s系列-k8s基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-25T00:27:33+08:00">
+                2019-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。比如集成日志组件和监控组件等。K8S支持5000个节点。<br><a id="more"></a></p>
+<h2 id="Borg系统介绍"><a href="#Borg系统介绍" class="headerlink" title="Borg系统介绍"></a>Borg系统介绍</h2><p>Borg是google内部大规模集群管理系统，负责对google内部很多核心服务的调度和管理，让用户专注于自己的核心业务。Borg主要由BorgMaster，Borglet，borgcfg，Scheduler组成</p>
+<p><img src="https://jimmysong.io/kubernetes-handbook/images/borg.png" alt=""></p>
+<ul>
+<li>BorgMaster是集群的大脑，负责维护整个集群的状态，将数据存储到Paxos存储中</li>
+<li>Scheduler负责任务的调度，根据应用的特点调度到具体的机器上去</li>
+<li>Borglet负责真正的运行任务</li>
+<li>borgcfg是Borg的命令行工具，用于跟Borg系统交互，一般通过一个配置文件来提交任务<h2 id="Kubernetes基础组件"><a href="#Kubernetes基础组件" class="headerlink" title="Kubernetes基础组件"></a>Kubernetes基础组件</h2>Kubernetes也是google开源的一个项目，所以正是有borg系统借鉴而来，整体架构与borg系统非常相似。K8S不同于Swarm和Mesos，他一开始就站在让他们无法企及的高度上，借鉴的同时也修复了很多在Borg中遗留的缺陷和问题。</li>
+</ul>
+<p><img src="https://jimmysong.io/kubernetes-handbook/images/architecture.png" alt="kubernetes架构"><br>kubernetes主要有如下核心组件</p>
+<ul>
+<li>ectd保存整个集群的状态</li>
+<li>apiserver提供整个集群的资源操作唯一入口，并提供授权、认证、访问控制、API注册和发现机制</li>
+<li>controller manager负责维护集群状态，比如故障检测、自动检测、滚动更新等</li>
+<li>scheduler负责资源的调度，按照预期的调度策略将Pod调度到合适的机器上</li>
+<li>kubelet负责维护容器的生命周期，同时也维护Volume和网络的管理，维护Volume和网络分别通过CNI（Container Network Interface）和CSI（Container Storage Interface）进行交互</li>
+<li>Container Runtime负责镜像管理以及Pod和容器的真正运行</li>
+<li>kube proxy负责为Service提供内部的服务发现和负载均衡</li>
+</ul>
+<p>同时还有一些推荐的插件</p>
+<ul>
+<li>CoreDNS负责为整个集群提供DNS服务</li>
+<li>Ingress Controller为服务提供外网入口</li>
+<li>Prometheus提供资源监控</li>
+<li>Dashboard提供K8S的gui</li>
+<li>Federation提供跨可用区的集群</li>
+</ul>
+<ol>
+<li>Borg系统虽然与k8s项目不相同，但是出发点都一样，如何管理、编排、调度用户提交的作业。<br>对于google来说，docker的出现只不过是让他们换了一种打包方式，大规模作业管理和调度的思路可以直接套在k8s上。</li>
+<li>k8s并不是把Docker作为一种核心架构，只是作为一种底层容器的实现而已。<blockquote>
+<p>运行在大规模集群中各种任务之间，实际上存在各种关系，这些关系的处理，才是作业编排和管理系统最困难的地方。</p>
+</blockquote>
+</li>
+</ol>
+<p>平时场景中随处可见这种依赖关系场景，比如一个web应用和数据库，负载均衡和代理的后端服务，一般情况下来说都会把这些依赖关系的服务部署在一个机子上，容器技术出现后，原先挤在一台机子上的各个应用、组件、守护进程都可以分别做成镜像运行，容器隔离互不干涉，有自己的资源配额，运行在集群的任何一台机器上。</p>
+<h2 id="Kubernetes资源组件介绍"><a href="#Kubernetes资源组件介绍" class="headerlink" title="Kubernetes资源组件介绍"></a>Kubernetes资源组件介绍</h2><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>Kubernetes中最小的调度单位不再是容器，而是一个Pod，Pod里面可以有多个容器,比如两个应用之间需要非常频繁的交互和访问，或者直接通过本地文件进行信息交换，这种情况就可以使用Pod部署两个容器进去。</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>Kubernetes中因为应用常常不在一台机器上，通常情况下如果某一台节点宕机，上面的所有Pod会根据资源需求在最合适的节点上重新启动起来，这也就造成了IP地址的不稳定性，比如我们现在部署一个数据库Pod和web应用Pod，web配置了数据库Pod的IP地址，万一数据库Pod所在节点宕机，则会被调度到其他节点进行重启，IP地址发生改变，这种情况下就需要Service服务这个概念了，Service类似负载均衡器，可以帮助我们代理Pod不管Pod在哪个节点上运行，都能通过配置对应的Service来找到。web应用只需要关心Service的信息而不需要关系到数据库Pod当前的IP等信息。</p>
+<h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><p>光有了pod还不够，我如何一次行新建多个pod做高可用，如何更新pod中镜像版本，k8s中，新建pod主要通过声明式的配置，要新建一个Pod时不应该通过运行命令的方式来新建出这个Pod，而且应该通过定义声明式文件来新建Pod，就比如可以声明一个Deployment类型的声明式文件，比如下面这种</p>
+<p>制定pod的副本数量为3，为pod打上一个标签 app=nginx，指定container的名字为nginx，pod使用镜像为1.7.9版本的nginx，指定container端口为80  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx:1.7.9</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+<h3 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h3><p>StatefulSet顾名思义，主要用来解决有状态服务的问题，Deployment针对无状态服务。比如像zookeeper和kafka等。<br>StatefulSet适用于有以下某个或多个需求的应用：</p>
+<ul>
+<li>稳定，唯一的网络标志</li>
+<li>稳定，持久化存储</li>
+<li>有序，优雅地部署和scale</li>
+<li>有序，优雅地删除和终止</li>
+<li>有序，自动的滚动升级</li>
+</ul>
+<h3 id="DaemonSet"><a href="#DaemonSet" class="headerlink" title="DaemonSet"></a>DaemonSet</h3><p>DaemonSet确保全部或者指定的一些Node上运行一个Pod的副本，当有Node加入集群，就新增一个Pod到这个新增的Node节点上。Node从集群一处，Pod也被回收，删除DaemonSet时删除它创建的所有的Pod。<br>常见用法：</p>
+<ul>
+<li>运行集群存储Daemon，比如在每个Node上运行glusterd、ceph</li>
+<li>每个Node上运行日志收集 fluentd、logstash等</li>
+<li>每个Node上运行监控</li>
+</ul>
+<h3 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h3><p>Job负责批处理任务，也就是只执行一次的任务，比如大数据任务。执行时产生一个Pod，运行指定的命令</p>
+<h3 id="CronJob"><a href="#CronJob" class="headerlink" title="CronJob"></a>CronJob</h3><p>管理基于时间的Pod，类似linux的crontab</p>
+<ol>
+<li>在给定时间点运行一次</li>
+<li>周期得在给定时间点运行</li>
+</ol>
+<h3 id="Horizontal-Pod-Autoscaling"><a href="#Horizontal-Pod-Autoscaling" class="headerlink" title="Horizontal Pod Autoscaling"></a>Horizontal Pod Autoscaling</h3><p>应用的资源使用率有高峰和低谷，如何提高集群的整体资源利用率，让service中的pod自动调整？HPA可以做到，不需要手动扩容缩容，可以自动化实现。</p>
+<h3 id="Ingress"><a href="#Ingress" class="headerlink" title="Ingress"></a>Ingress</h3><p>Ingress和Service一样都是用来做服务发现的，Service通常用于提供集群内部的访问入口（但是也可以制定Service的Type=LoadBalancer或者是NodePort来暴露给外部，但是不推荐），Ingress是kubernetes集群外部访问集群内部服务的入口，Ingress需要配合IngressController配合使用，Ingress相当于我们nginx配置文件的转发规则等，Ingress配置转发到某个Service的某个port。常见Ingress Controller如下。</p>
+<ul>
+<li>kubernetes当前支持和维护GCE和nginx两种controller</li>
+<li>F5公司支持维护F5 BIG-IP Controller for Kubernetes</li>
+<li>Kong支持维护社区版和企业版的Kong Ingress Controller for Kubernetes</li>
+<li>Traefik是功能齐全的Ingress Controller</li>
+<li>Istio使用CRD Gateway来控制Ingress流量</li>
+</ul>
+<h3 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h3><p>ConfigMap API资源用来保存key-value pair配置数据，ConfigMap跟下面的Secret很相似，但是ConfigMap更方便处理不含敏感信息的字符串。就好像我们平时加载props下面properties文件或现在的yaml配置文件的信息到内存中，直接通过Spring的注解可以取到</p>
+<h3 id="Secret"><a href="#Secret" class="headerlink" title="Secret"></a>Secret</h3><p>如果两个Pod之间不仅仅有“访问关系”，还要在请求时加上授权信息，典型场景就是应用访问数据库需要数据库的用户名和密码信息，kubernetes中提供了一种叫做Secret的对象，其实是保存在Ectd中的键值对数据，把用户名和密码通过Secret的方式存在Etcd里面，kubernetes就会在你指定的Pod里面把Secret里的数据已Volume方式挂载到容器里或者以环境变量的方式引入，这样应用就能访问到数据库了</p>
+<h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><p>Label是附加到一些对象上面的键值对，常用场景比如给pod打上一些label，Service通过标签找到对应的Pod，常常与Label Selector配合使用，Label Selector有两种类型：</p>
+<ul>
+<li>equality-based ：可以使用=、==、!=操作符，可以使用逗号分隔多个表达式</li>
+<li>set-based ：可以使用in、notin、!操作符，另外还可以没有操作符，直接写出某个label的key，表示过滤有某个key的object而不管该key的value是何值，!表示没有该label的object</li>
+</ul>
+<h3 id="Taint和Toleration"><a href="#Taint和Toleration" class="headerlink" title="Taint和Toleration"></a>Taint和Toleration</h3><p>Taint（污点）和 Toleration（容忍）可以作用于 node 和 pod 上，其目的是优化 pod 在集群间的调度，Taint和Toleration配合使用可以避免Pod被分配到不合适的节点上。可以再Node上配置Taint，Pod上配置Toleration</p>
+<p>配上一张图</p>
+<p><img src="https://user-images.githubusercontent.com/20592210/54933568-d8d38280-4f57-11e9-9fb9-2820e35ecd56.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/17/k8s系列-使用kubeadm部署k8s集群/" rel="next" title="k8s系列-使用kubeadm部署k8s集群">
+                <i class="fa fa-chevron-left"></i> k8s系列-使用kubeadm部署k8s集群
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/26/k8s系列-pod/" rel="prev" title="k8s系列-pod">
+                k8s系列-pod <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ggzr</p>
+              <p class="site-description motion-element" itemprop="description">一只咸鱼的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Borg系统介绍"><span class="nav-number">1.</span> <span class="nav-text">Borg系统介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes基础组件"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes基础组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes资源组件介绍"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes资源组件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">3.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">3.2.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deployment"><span class="nav-number">3.3.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StatefulSet"><span class="nav-number">3.4.</span> <span class="nav-text">StatefulSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DaemonSet"><span class="nav-number">3.5.</span> <span class="nav-text">DaemonSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job"><span class="nav-number">3.6.</span> <span class="nav-text">Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CronJob"><span class="nav-number">3.7.</span> <span class="nav-text">CronJob</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Horizontal-Pod-Autoscaling"><span class="nav-number">3.8.</span> <span class="nav-text">Horizontal Pod Autoscaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress"><span class="nav-number">3.9.</span> <span class="nav-text">Ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConfigMap"><span class="nav-number">3.10.</span> <span class="nav-text">ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Secret"><span class="nav-number">3.11.</span> <span class="nav-text">Secret</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-number">3.12.</span> <span class="nav-text">Label</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Taint和Toleration"><span class="nav-number">3.13.</span> <span class="nav-text">Taint和Toleration</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ggzr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
