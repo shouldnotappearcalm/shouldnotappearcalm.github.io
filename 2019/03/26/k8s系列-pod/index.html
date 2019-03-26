@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="pod详解，敬请期待">
+<meta name="description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
 <meta name="keywords" content="k8s">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s系列-pod">
+<meta property="og:title" content="k8s系列-Pod">
 <meta property="og:url" content="http://losergzr.cn/2019/03/26/k8s系列-pod/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="pod详解，敬请期待">
+<meta property="og:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-25T16:59:01.936Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png">
+<meta property="og:updated_time" content="2019-03-26T15:01:32.354Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s系列-pod">
-<meta name="twitter:description" content="pod详解，敬请期待">
+<meta name="twitter:title" content="k8s系列-Pod">
+<meta name="twitter:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png">
 
 
 
@@ -126,7 +129,7 @@
 
 
 
-  <title>k8s系列-pod | losergzr's blog</title>
+  <title>k8s系列-Pod | losergzr's blog</title>
   
 
 
@@ -280,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">k8s系列-pod</h1>
+          <h1 class="post-title" itemprop="name headline">k8s系列-Pod</h1>
         
 
         <div class="post-meta">
@@ -330,8 +333,37 @@
       
 
       
-        <p>pod详解，敬请期待</p>
-
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。</p>
+<p>Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。<br><a id="more"></a><br>一个很简单的Pod声明式文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: host-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx:1.8</span><br></pre></td></tr></table></figure></p>
+<p>可以保存为xxx.yaml，使用如下命令即可运行起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f xx.yaml</span><br></pre></td></tr></table></figure></p>
+<p>可以使用下面的命令在master上查看你运行的所有pod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get　pods</span><br><span class="line">＃ -o wide 可以看到运行的节点，Pod的IP等</span><br><span class="line"># -w 可以实时查看到pod的状态，你在apply一个文件的时候就能看到</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="为什么需要Pod而不是Container"><a href="#为什么需要Pod而不是Container" class="headerlink" title="为什么需要Pod而不是Container"></a>为什么需要Pod而不是Container</h2><p>首先，容器的本质就是进程，Kubernetes就好像是操作系统<br>我们现在随便找到一台Linux机器，执行一条如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pstree -g</span><br></pre></td></tr></table></figure></p>
+<p>从下图运行的结果来看，进程点多都会以进程组的方式来运行，而不是孤苦伶仃的（连进程都基本脱单了），好比图中最清晰的teamviewerd来说，后面都有个数字，而且都一样，这个就是这个进程组的id （Process Group ID）<br><img src="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png" alt="image"></p>
+<p>从上面的分析中或许你能够察觉到为什么Kubernetes中最小的调度单位是Pod了，早在Borg的工程师开发Borg的时候就发现，某些应用之间就存在着类似”进程和进程组“的关系，也就是一些协作特别密切的应用，使得他们必须部署在同一台机器上。</p>
+<p><strong>举例</strong><br>rsyslogd负责Linux操作系统的日志处理，rsyslogd中的主程序main，和需要使用到的内核日志模块imklog以及imuxsock都属于同一个进程组，这三个进程一定要运行在一台机器上，不然它们之间的基于Socket通信和文件交换都会出现问题。</p>
+<blockquote>
+<p>当前使用Container方式也能做，一个Container还是可以运行多个进程，只是容器中只有一个PID=1的进程，这个PID=1的进程退出了这个容器也就停止了，可是这三个模块PID不为1的那两个某一个退出都不会影响其他两个进程的运行，但是功能却早已无效</p>
+</blockquote>
+<p>在kubernetes项目中，Pod可以直接解决这个问题，里面运行多个Container，并且这三个紧密协作，这个Pod一重启他们仨都重启了，他们三个直接通过localhost或者Socket文件进行本地通信。</p>
+<p>但是也不是所有的应用都应该有这种亲密关系，就好像我们的web应用和数据库，如果这俩部署在一个Pod里面，万一哪天web应用真挂了，这数据库好像跟着一起jump不是太好。</p>
+<hr>
+<h2 id="Pod的实现原理"><a href="#Pod的实现原理" class="headerlink" title="Pod的实现原理"></a>Pod的实现原理</h2><p>关于Pod最重要的一个事实是Pod只是一个逻辑概念，Kubernetes真正处理的还是宿主机操作系统Linux容器的Namespace和Cgroups，并不存在所谓的Pod的便捷或者隔离环境，<strong>Pod其实是一组共享了某些资源的容器，Pod里面所有的容器共享的是同一个Network Namespace，并且可以声明为一个Volume</strong><br>这么看来其实仿佛跟平时简单的使用Docker没什么区别，就好像是先run了一个容器A<br>然后使用 docker run –net=A –volume-from=A这种运行方式，这样在Docker下两个容器也能共享一个Network Namespace，一个Volume，但是这样的一个问题就是某一个容器必须率先启动。  </p>
+<p> Kubernetes中Pod有一个中间容器，叫做Infra容器，Infra一定是这个Pod中第一个被创建的，其他容器都加入到这个容器的Network Namespace、Volume等，这个容器使用pause镜像，占用非常小。</p>
+<p> 所以对于Pod中的A、B容器来说：</p>
+<ul>
+<li>A、B容器可以直接使用localhost进行通信</li>
+<li>他们看到的网络设备跟Infra容器看到的一样</li>
+<li>一个Pod只有一个IP地址，也就是这个Pod对应的Network Namespace对应的IP地址</li>
+<li>Pod的生命周期只跟Infra一样，与容器A和B无关</li>
+</ul>
+<hr>
+<h2 id="声明式文件"><a href="#声明式文件" class="headerlink" title="声明式文件"></a>声明式文件</h2><h3 id="字段介绍"><a href="#字段介绍" class="headerlink" title="字段介绍"></a>字段介绍</h3><h4 id="NodeSelector：一个将Pod与Node进行绑定的字段"><a href="#NodeSelector：一个将Pod与Node进行绑定的字段" class="headerlink" title="NodeSelector：一个将Pod与Node进行绑定的字段"></a>NodeSelector：一个将Pod与Node进行绑定的字段</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind： Pod</span><br><span class="line">···</span><br><span class="line">spec：</span><br><span class="line">  nodeSelector:</span><br><span class="line">  disktype: ssd</span><br></pre></td></tr></table></figure>
+<p>上面这个nodeSelector的作用是，这个Pod只运行在打上了”disktype: ssd“标签的Node上，否则直接调度失败。</p>
+<h3 id="HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><a href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容" class="headerlink" title="HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容"></a>HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: host-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx:1.8</span><br><span class="line">  hostAliases:</span><br><span class="line">  - ip: &quot;10.0.0.0&quot;</span><br><span class="line">    hostnames:</span><br><span class="line">    - &quot;foo.remote&quot;</span><br><span class="line">    - &quot;bar.remote&quot;</span><br></pre></td></tr></table></figure>
+<p>这样定义的Pod启动后，我们通过exec进入pod，能看到/etc/hosts文件中多出这么几行<br><img src="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png" alt="image"></p>
+<p>最下面两行就是通过HostAliases为Pod设置的，kubernetes项目如果想要设置hosts文件的内容必须通过这种方式，如果进入Pod去手动修改hosts文件，Pod一旦重建就没了。</p>
+<h3 id="shareProcessNamespace-true"><a href="#shareProcessNamespace-true" class="headerlink" title="shareProcessNamespace=true"></a>shareProcessNamespace=true</h3>
       
     </div>
     
@@ -421,8 +453,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -473,6 +514,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要Pod而不是Container"><span class="nav-number">2.</span> <span class="nav-text">为什么需要Pod而不是Container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod的实现原理"><span class="nav-number">3.</span> <span class="nav-text">Pod的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明式文件"><span class="nav-number">4.</span> <span class="nav-text">声明式文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字段介绍"><span class="nav-number">4.1.</span> <span class="nav-text">字段介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NodeSelector：一个将Pod与Node进行绑定的字段"><span class="nav-number">4.1.1.</span> <span class="nav-text">NodeSelector：一个将Pod与Node进行绑定的字段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><span class="nav-number">4.2.</span> <span class="nav-text">HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shareProcessNamespace-true"><span class="nav-number">4.3.</span> <span class="nav-text">shareProcessNamespace=true</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
