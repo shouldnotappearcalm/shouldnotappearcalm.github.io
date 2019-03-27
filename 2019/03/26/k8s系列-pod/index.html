@@ -89,12 +89,12 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55090696-84acd780-50ea-11e9-9caa-6d8f1073eca4.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55091029-1288c280-50eb-11e9-8dc1-a277c61398ac.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55094365-3ea74200-50f1-11e9-80d7-a38b555cc422.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55094104-b1fc8400-50f0-11e9-96ff-407aa2a288c2.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55092475-93e15480-50ed-11e9-8b08-3ddb76f7a14f.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55092512-a8255180-50ed-11e9-9bd4-e48b20acb557.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55093298-27675500-50ef-11e9-88fc-06eed3542ba1.png">
-<meta property="og:updated_time" content="2019-03-27T16:20:55.668Z">
+<meta property="og:updated_time" content="2019-03-27T16:35:01.969Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-Pod">
 <meta name="twitter:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
@@ -369,10 +369,10 @@
 <p>这样定义的Pod启动后，我们通过exec进入pod，能看到/etc/hosts文件中多出这么几行<br><img src="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png" alt="image"></p>
 <p>最下面两行就是通过HostAliases为Pod设置的，kubernetes项目如果想要设置hosts文件的内容必须通过这种方式，如果进入Pod去手动修改hosts文件，Pod一旦重建就没了。</p>
 <h3 id="shareProcessNamespace-true"><a href="#shareProcessNamespace-true" class="headerlink" title="shareProcessNamespace=true"></a>shareProcessNamespace=true</h3><p>Pod的设计就是让里面容器尽可能多的共享Linux Namespace，仅保留必要的隔离和限制能力。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">spec:</span><br><span class="line">  shareProcessNamespace: true</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx</span><br><span class="line">    image: nginx:1.8</span><br><span class="line">  - name: shell</span><br><span class="line">    image: busybox</span><br><span class="line">    stdin: true</span><br><span class="line">    tty: true</span><br></pre></td></tr></table></figure></p>
-<p>上面这个文件定义了两个Pod，一个是nginx容器，一个是开启了tty和stdin的shell容器。tty和stdin相当于docker run的-it，tty是Linux提供给用户的一个常驻小程序，接收用户的标准输入，返回操作系统标准输出，为了能在tty中输入信息，需要开启stdin。<br>使用如下命令进入可以观察到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl exec -ti nginx /bin/bash</span><br><span class="line"></span><br><span class="line">ps ax</span><br><span class="line"></span><br><span class="line">可以看到三个Container所有的正在运行的进程，包括nginx，sh，以及Infra的/pause进程</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://user-images.githubusercontent.com/20592210/55090696-84acd780-50ea-11e9-9caa-6d8f1073eca4.png" alt="image"></p>
-<p>没有这个属性可以看到输出如下</p>
-<p><img src="https://user-images.githubusercontent.com/20592210/55091029-1288c280-50eb-11e9-8dc1-a277c61398ac.png" alt="image"></p>
+<p>上面这个文件定义了两个Pod，一个是nginx容器，一个是开启了tty和stdin的shell容器。tty和stdin相当于docker run的-it，tty是Linux提供给用户的一个常驻小程序，接收用户的标准输入，返回操作系统标准输出，为了能在tty中输入信息，需要开启stdin。<br>使用如下命令进入可以观察到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl attach -ti nginx  -c shell</span><br><span class="line"></span><br><span class="line">ps ax</span><br><span class="line"></span><br><span class="line">可以看到三个Container所有的正在运行的进程，包括nginx，sh，以及Infra的/pause进程</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/55094365-3ea74200-50f1-11e9-80d7-a38b555cc422.png" alt="image"></p>
+<p>没有这个shareProcessNamespace属性可以看到输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#进入shell这个容器</span><br><span class="line">kubectl attach -ti nginx  -c shell</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/55094104-b1fc8400-50f0-11e9-96ff-407aa2a288c2.png" alt="image"></p>
 <h3 id="Containers字段"><a href="#Containers字段" class="headerlink" title="Containers字段"></a>Containers字段</h3><ul>
 <li>image 制定镜像</li>
 <li>command 启动命令</li>
