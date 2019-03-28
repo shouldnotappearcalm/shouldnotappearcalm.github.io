@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/borg.png">
 <meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/architecture.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/54933568-d8d38280-4f57-11e9-9fb9-2820e35ecd56.png">
-<meta property="og:updated_time" content="2019-03-25T16:59:06.430Z">
+<meta property="og:updated_time" content="2019-03-28T16:31:59.426Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-k8s基础">
 <meta name="twitter:description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
@@ -345,13 +345,13 @@
 </ul>
 <p><img src="https://jimmysong.io/kubernetes-handbook/images/architecture.png" alt="kubernetes架构"><br>kubernetes主要有如下核心组件</p>
 <ul>
-<li>ectd保存整个集群的状态</li>
-<li>apiserver提供整个集群的资源操作唯一入口，并提供授权、认证、访问控制、API注册和发现机制</li>
-<li>controller manager负责维护集群状态，比如故障检测、自动检测、滚动更新等</li>
+<li>ectd保存整个集群的状态和配置，所有节点都从etcd中获取其他机器状态也保存自己的状态</li>
+<li>apiserver提供整个集群的资源操作唯一入口，并提供授权、认证、访问控制、API注册和发现机制,提供HTTP Rest接口</li>
+<li>controller manager负责维护集群状态，比如Pod副本、故障检测、自动检测、滚动更新等</li>
 <li>scheduler负责资源的调度，按照预期的调度策略将Pod调度到合适的机器上</li>
-<li>kubelet负责维护容器的生命周期，同时也维护Volume和网络的管理，维护Volume和网络分别通过CNI（Container Network Interface）和CSI（Container Storage Interface）进行交互</li>
+<li>kubelet负责维护容器的生命周期，负责这台Node的所有容器，同时也维护Volume和网络的管理，维护Volume和网络分别通过CNI（Container Network Interface）和CSI（Container Storage Interface）进行交互</li>
 <li>Container Runtime负责镜像管理以及Pod和容器的真正运行</li>
-<li>kube proxy负责为Service提供内部的服务发现和负载均衡</li>
+<li>kube proxy负责为Service提供内部的服务发现和负载均衡，使用etcd watch机制监控集群的数据动态变化，保证Pod的IP变化Service感知</li>
 </ul>
 <p>同时还有一些推荐的插件</p>
 <ul>

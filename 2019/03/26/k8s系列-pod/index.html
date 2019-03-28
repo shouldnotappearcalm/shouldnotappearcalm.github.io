@@ -94,7 +94,8 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55092475-93e15480-50ed-11e9-8b08-3ddb76f7a14f.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55092512-a8255180-50ed-11e9-9bd4-e48b20acb557.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55093298-27675500-50ef-11e9-88fc-06eed3542ba1.png">
-<meta property="og:updated_time" content="2019-03-27T16:35:01.969Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55173833-5943ee80-51b7-11e9-8aee-e98d337362bc.png">
+<meta property="og:updated_time" content="2019-03-28T16:26:48.152Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-Pod">
 <meta name="twitter:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
@@ -363,7 +364,7 @@
 <li>Pod的生命周期只跟Infra一样，与容器A和B无关</li>
 </ul>
 <hr>
-<h2 id="声明式文件"><a href="#声明式文件" class="headerlink" title="声明式文件"></a>声明式文件</h2><h3 id="字段介绍"><a href="#字段介绍" class="headerlink" title="字段介绍"></a>字段介绍</h3><h4 id="NodeSelector：一个将Pod与Node进行绑定的字段"><a href="#NodeSelector：一个将Pod与Node进行绑定的字段" class="headerlink" title="NodeSelector：一个将Pod与Node进行绑定的字段"></a>NodeSelector：一个将Pod与Node进行绑定的字段</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind： Pod</span><br><span class="line">···</span><br><span class="line">spec：</span><br><span class="line">  nodeSelector:</span><br><span class="line">  disktype: ssd</span><br></pre></td></tr></table></figure>
+<h2 id="声明式文件"><a href="#声明式文件" class="headerlink" title="声明式文件"></a>声明式文件</h2><h3 id="字段介绍"><a href="#字段介绍" class="headerlink" title="字段介绍"></a>字段介绍</h3><h4 id="NodeSelector：一个将Pod与Node进行绑定的字段"><a href="#NodeSelector：一个将Pod与Node进行绑定的字段" class="headerlink" title="NodeSelector：一个将Pod与Node进行绑定的字段"></a>NodeSelector：一个将Pod与Node进行绑定的字段</h4><p><code>kubectl api-versions</code>查看所有可用的apiVersion<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind： Pod</span><br><span class="line">···</span><br><span class="line">spec：</span><br><span class="line">  nodeSelector:</span><br><span class="line">  disktype: ssd</span><br></pre></td></tr></table></figure></p>
 <p>上面这个nodeSelector的作用是，这个Pod只运行在打上了”disktype: ssd“标签的Node上，否则直接调度失败。</p>
 <h3 id="HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><a href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容" class="headerlink" title="HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容"></a>HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: host-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx:1.8</span><br><span class="line">  hostAliases:</span><br><span class="line">  - ip: &quot;10.0.0.0&quot;</span><br><span class="line">    hostnames:</span><br><span class="line">    - &quot;foo.remote&quot;</span><br><span class="line">    - &quot;bar.remote&quot;</span><br></pre></td></tr></table></figure>
 <p>这样定义的Pod启动后，我们通过exec进入pod，能看到/etc/hosts文件中多出这么几行<br><img src="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png" alt="image"></p>
@@ -401,6 +402,26 @@
 <p>Status还可以细分为Conditions，包括PodScheduled、Ready、Initialized，Unschedulable<br>比如Status是Pending，Condition是Unschedulable，就是调度出现了问题</p>
 <p>执行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod pod-name</span><br></pre></td></tr></table></figure></p>
 <p>看到下面这四个Ready、Initialized、ContainersReady、PodScheduled都为True才是真的Pod成功启动<br><img src="https://user-images.githubusercontent.com/20592210/55093298-27675500-50ef-11e9-88fc-06eed3542ba1.png" alt="image"></p>
+<p>###livenessProbe<br>livenessProbe还有http请求，tcpSocket等多种方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    test: liveness</span><br><span class="line">  name: test-liveness-exec</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: liveness</span><br><span class="line">      image: busybox</span><br><span class="line">      args:</span><br><span class="line">        - /bin/sh</span><br><span class="line">        - -c</span><br><span class="line">        - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600</span><br><span class="line">      livenessProbe:</span><br><span class="line">        exec:</span><br><span class="line">          command:</span><br><span class="line">            - cat</span><br><span class="line">            - /tmp/healthy</span><br><span class="line">        initialDelaySeconds: 5</span><br><span class="line">        periodSeconds: 5</span><br></pre></td></tr></table></figure></p>
+<p>这个Pod容器大概做了些啥妖呢。。启动之后创建一个healthy文件，30s后删了</p>
+<p>livenessProbe作为健康状态探测指针，我们指定为exec即执行命令</p>
+<blockquote>
+<p>linux命令命令执行成功返回值为0，不成功为非0<br>这个探针如果发现cat文件存在，就认为Pod不但已经启动，而且还是健康的，initialDelaySeconds代表启动5秒后执行第一次，后面每5s执行一次。</p>
+</blockquote>
+<p>将上面文件使用如下命令运行起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f xxx.yaml</span><br></pre></td></tr></table></figure></p>
+<p>前面几分钟都能检测到虽然restart次数在增加，但是还是Running状态</p>
+<p>过了几分钟使用<code>kubectl describe pod test-liveness-exec</code>看到如下的events<br><img src="https://user-images.githubusercontent.com/20592210/55173833-5943ee80-51b7-11e9-8aee-e98d337362bc.png" alt="image"></p>
+<p>livenessProbe探测到容器不健康会一直重启</p>
+<p>###restartPolicy</p>
+<p>Pod也有缺点，Pod如果真的出现异常，你可以看到pod的restart次数更改，因为Pod有个字段叫做restartPolicy，默认是Always。</p>
+<p>容器发生异常就会重新创建，Pod的恢复过程，永远会发生在当前节点上，即便是节点宕机，除非pod.spec.node发生改变，不然不会发生改变，这也就是单个Pod和由Deployment创建的Pod区别。</p>
+<p>restartPolicy：</p>
+<ul>
+<li>Always： 任何情况下，只要容器不在运行状态就自动重启   默认值</li>
+<li>OnFailure 容器异常时重启</li>
+<li>Never 从来不重启</li>
+</ul>
+<p>比如某些任务只运行一下不需要一直运行，就可以设置为Never</p>
 
       
     </div>
