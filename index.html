@@ -305,6 +305,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -333,7 +355,7 @@
 
       
         
-          <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。</p>
+          <h1 id="K8S-Pod"><a href="#K8S-Pod" class="headerlink" title="K8S-Pod"></a>K8S-Pod</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。</p>
 <p>Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。<br>
           <!--noindex-->
           <div class="post-button text-center">
@@ -430,6 +452,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -458,7 +502,7 @@
 
       
         
-          <p>集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。比如集成日志组件和监控组件等。K8S支持5000个节点。<br>
+          <h1 id="K8S-基础组件"><a href="#K8S-基础组件" class="headerlink" title="K8S-基础组件"></a>K8S-基础组件</h1><p>集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。比如集成日志组件和监控组件等。K8S支持5000个节点。<br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/03/25/k8s系列-k8s基础/#more" rel="contents">
@@ -554,6 +598,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -582,7 +648,7 @@
 
       
         
-          <h3 id="一-kubeadm简介"><a href="#一-kubeadm简介" class="headerlink" title="一.kubeadm简介"></a>一.kubeadm简介</h3><p>K8S基础相关概念后续介绍，先使用kubeadm搭建k8s集群</p>
+          <h1 id="K8S-部署"><a href="#K8S-部署" class="headerlink" title="K8S-部署"></a>K8S-部署</h1><h2 id="一-kubeadm简介"><a href="#一-kubeadm简介" class="headerlink" title="一.kubeadm简介"></a>一.kubeadm简介</h2><p>K8S基础相关概念后续介绍，先使用kubeadm搭建k8s集群</p>
 <p>由于原生K8S部署方式过于复杂，被广大k8s用户用户诟病，所以推动了像kubeadm、kops、kubespray等等，虽然原生k8s部署复杂，所以先使用kubeadm进行k8s部署  </p>
 <p>kubeadm介绍</p>
 <blockquote>
@@ -1305,13 +1371,22 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
 
             
               
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>

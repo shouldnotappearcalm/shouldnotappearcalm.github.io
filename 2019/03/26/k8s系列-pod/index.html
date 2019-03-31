@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="k8s," />
+  <meta name="keywords" content="k8s,DevOps," />
 
 
 
@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
-<meta name="keywords" content="k8s">
+<meta name="description" content="K8S-Pod基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调">
+<meta name="keywords" content="k8s,DevOps">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s系列-Pod">
 <meta property="og:url" content="http://losergzr.cn/2019/03/26/k8s系列-pod/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
+<meta property="og:description" content="K8S-Pod基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png">
@@ -95,10 +95,10 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55092512-a8255180-50ed-11e9-9bd4-e48b20acb557.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55093298-27675500-50ef-11e9-88fc-06eed3542ba1.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55173833-5943ee80-51b7-11e9-8aee-e98d337362bc.png">
-<meta property="og:updated_time" content="2019-03-28T16:26:48.152Z">
+<meta property="og:updated_time" content="2019-03-31T14:29:27.587Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-Pod">
-<meta name="twitter:description" content="基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。">
+<meta name="twitter:description" content="K8S-Pod基本概念Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。 Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png">
 
 
@@ -312,6 +312,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -339,12 +361,16 @@
       
 
       
-        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。</p>
-<p>Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。<br><a id="more"></a><br>一个很简单的Pod声明式文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: host-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx:1.8</span><br></pre></td></tr></table></figure></p>
-<p>可以保存为xxx.yaml，使用如下命令即可运行起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f xx.yaml</span><br></pre></td></tr></table></figure></p>
-<p>可以使用下面的命令在master上查看你运行的所有pod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get　pods</span><br><span class="line">＃ -o wide 可以看到运行的节点，Pod的IP等</span><br><span class="line"># -w 可以实时查看到pod的状态，你在apply一个文件的时候就能看到</span><br></pre></td></tr></table></figure></p>
+        <h1 id="K8S-Pod"><a href="#K8S-Pod" class="headerlink" title="K8S-Pod"></a>K8S-Pod</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Pod是kubernetes中最重要的概念，Pod不是容器，是kubernetes中最小的编排单位，这个设计落实到API对象上，容器Container变成了Pod的一个属性，Pod扮演的是传统部署中的“虚拟机”的角色，这样设计是为了让用户从传统虚拟机环境迁移到kubernetes更加顺畅。</p>
+<p>Pod就好比现在的虚拟机，Container就是虚拟机里面的进程，比如：存储、网络、调度的Pod。<br><a id="more"></a><br>一个很简单的Pod声明式文件如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">host-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">nginx-container</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.8</span></span><br></pre></td></tr></table></figure>
+<p>可以保存为xxx.yaml，使用如下命令即可运行起来</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f xx.yaml</span><br></pre></td></tr></table></figure>
+<p>可以使用下面的命令在master上查看你运行的所有pod</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get　pods</span><br><span class="line">＃ -o wide 可以看到运行的节点，Pod的IP等</span><br><span class="line"><span class="meta">#</span> -w 可以实时查看到pod的状态，你在apply一个文件的时候就能看到</span><br></pre></td></tr></table></figure>
 <hr>
-<h2 id="为什么需要Pod而不是Container"><a href="#为什么需要Pod而不是Container" class="headerlink" title="为什么需要Pod而不是Container"></a>为什么需要Pod而不是Container</h2><p>首先，容器的本质就是进程，Kubernetes就好像是操作系统<br>我们现在随便找到一台Linux机器，执行一条如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pstree -g</span><br></pre></td></tr></table></figure></p>
+<h2 id="为什么需要Pod而不是Container"><a href="#为什么需要Pod而不是Container" class="headerlink" title="为什么需要Pod而不是Container"></a>为什么需要Pod而不是Container</h2><p>首先，容器的本质就是进程，Kubernetes就好像是操作系统<br>我们现在随便找到一台Linux机器，执行一条如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pstree -g</span><br></pre></td></tr></table></figure>
 <p>从下图运行的结果来看，进程点多都会以进程组的方式来运行，而不是孤苦伶仃的（连进程都基本脱单了），好比图中最清晰的teamviewerd来说，后面都有个数字，而且都一样，这个就是这个进程组的id （Process Group ID）<br><img src="https://user-images.githubusercontent.com/20592210/55005697-6aee9000-5017-11e9-861b-ec65440fd259.png" alt="image"></p>
 <p>从上面的分析中或许你能够察觉到为什么Kubernetes中最小的调度单位是Pod了，早在Borg的工程师开发Borg的时候就发现，某些应用之间就存在着类似”进程和进程组“的关系，也就是一些协作特别密切的应用，使得他们必须部署在同一台机器上。</p>
 <p><strong>举例</strong><br>rsyslogd负责Linux操作系统的日志处理，rsyslogd中的主程序main，和需要使用到的内核日志模块imklog以及imuxsock都属于同一个进程组，这三个进程一定要运行在一台机器上，不然它们之间的基于Socket通信和文件交换都会出现问题。</p>
@@ -355,7 +381,7 @@
 <p>但是也不是所有的应用都应该有这种亲密关系，就好像我们的web应用和数据库，如果这俩部署在一个Pod里面，万一哪天web应用真挂了，这数据库好像跟着一起jump不是太好。</p>
 <hr>
 <h2 id="Pod的实现原理"><a href="#Pod的实现原理" class="headerlink" title="Pod的实现原理"></a>Pod的实现原理</h2><p>关于Pod最重要的一个事实是Pod只是一个逻辑概念，Kubernetes真正处理的还是宿主机操作系统Linux容器的Namespace和Cgroups，并不存在所谓的Pod的便捷或者隔离环境，<strong>Pod其实是一组共享了某些资源的容器，Pod里面所有的容器共享的是同一个Network Namespace，并且可以声明为一个Volume</strong><br>这么看来其实仿佛跟平时简单的使用Docker没什么区别，就好像是先run了一个容器A<br>然后使用 docker run –net=A –volume-from=A这种运行方式，这样在Docker下两个容器也能共享一个Network Namespace，一个Volume，但是这样的一个问题就是某一个容器必须率先启动。  </p>
-<p> Kubernetes中Pod有一个中间容器，叫做Infra容器，Infra一定是这个Pod中第一个被创建的，其他容器都加入到这个容器的Network Namespace、Volume等，这个容器使用pause镜像，占用非常小。</p>
+<p>Kubernetes中Pod有一个中间容器，叫做Infra容器，Infra一定是这个Pod中第一个被创建的，其他容器都加入到这个容器的Network Namespace、Volume等，这个容器使用pause镜像，占用非常小。</p>
 <p> 所以对于Pod中的A、B容器来说：</p>
 <ul>
 <li>A、B容器可以直接使用localhost进行通信</li>
@@ -364,15 +390,19 @@
 <li>Pod的生命周期只跟Infra一样，与容器A和B无关</li>
 </ul>
 <hr>
-<h2 id="声明式文件"><a href="#声明式文件" class="headerlink" title="声明式文件"></a>声明式文件</h2><h3 id="字段介绍"><a href="#字段介绍" class="headerlink" title="字段介绍"></a>字段介绍</h3><h4 id="NodeSelector：一个将Pod与Node进行绑定的字段"><a href="#NodeSelector：一个将Pod与Node进行绑定的字段" class="headerlink" title="NodeSelector：一个将Pod与Node进行绑定的字段"></a>NodeSelector：一个将Pod与Node进行绑定的字段</h4><p><code>kubectl api-versions</code>查看所有可用的apiVersion<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind： Pod</span><br><span class="line">···</span><br><span class="line">spec：</span><br><span class="line">  nodeSelector:</span><br><span class="line">  disktype: ssd</span><br></pre></td></tr></table></figure></p>
+<h2 id="声明式文件"><a href="#声明式文件" class="headerlink" title="声明式文件"></a>声明式文件</h2><h3 id="字段介绍"><a href="#字段介绍" class="headerlink" title="字段介绍"></a>字段介绍</h3><h4 id="NodeSelector：一个将Pod与Node进行绑定的字段"><a href="#NodeSelector：一个将Pod与Node进行绑定的字段" class="headerlink" title="NodeSelector：一个将Pod与Node进行绑定的字段"></a>NodeSelector：一个将Pod与Node进行绑定的字段</h4><p><code>kubectl api-versions</code>查看所有可用的apiVersion</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="string">kind：</span> <span class="string">Pod</span></span><br><span class="line"><span class="string">···</span></span><br><span class="line"><span class="string">spec：</span></span><br><span class="line"><span class="attr">  nodeSelector:</span></span><br><span class="line"><span class="attr">  disktype:</span> <span class="string">ssd</span></span><br></pre></td></tr></table></figure>
 <p>上面这个nodeSelector的作用是，这个Pod只运行在打上了”disktype: ssd“标签的Node上，否则直接调度失败。</p>
-<h3 id="HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><a href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容" class="headerlink" title="HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容"></a>HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: host-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx:1.8</span><br><span class="line">  hostAliases:</span><br><span class="line">  - ip: &quot;10.0.0.0&quot;</span><br><span class="line">    hostnames:</span><br><span class="line">    - &quot;foo.remote&quot;</span><br><span class="line">    - &quot;bar.remote&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><a href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容" class="headerlink" title="HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容"></a>HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">host-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">nginx-container</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.8</span></span><br><span class="line"><span class="attr">  hostAliases:</span></span><br><span class="line"><span class="attr">  - ip:</span> <span class="string">"10.0.0.0"</span></span><br><span class="line"><span class="attr">    hostnames:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"foo.remote"</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"bar.remote"</span></span><br></pre></td></tr></table></figure>
 <p>这样定义的Pod启动后，我们通过exec进入pod，能看到/etc/hosts文件中多出这么几行<br><img src="https://user-images.githubusercontent.com/20592210/55004421-31b52080-5015-11e9-9031-c9bb3a11a3c4.png" alt="image"></p>
 <p>最下面两行就是通过HostAliases为Pod设置的，kubernetes项目如果想要设置hosts文件的内容必须通过这种方式，如果进入Pod去手动修改hosts文件，Pod一旦重建就没了。</p>
-<h3 id="shareProcessNamespace-true"><a href="#shareProcessNamespace-true" class="headerlink" title="shareProcessNamespace=true"></a>shareProcessNamespace=true</h3><p>Pod的设计就是让里面容器尽可能多的共享Linux Namespace，仅保留必要的隔离和限制能力。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">spec:</span><br><span class="line">  shareProcessNamespace: true</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx</span><br><span class="line">    image: nginx:1.8</span><br><span class="line">  - name: shell</span><br><span class="line">    image: busybox</span><br><span class="line">    stdin: true</span><br><span class="line">    tty: true</span><br></pre></td></tr></table></figure></p>
-<p>上面这个文件定义了两个Pod，一个是nginx容器，一个是开启了tty和stdin的shell容器。tty和stdin相当于docker run的-it，tty是Linux提供给用户的一个常驻小程序，接收用户的标准输入，返回操作系统标准输出，为了能在tty中输入信息，需要开启stdin。<br>使用如下命令进入可以观察到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl attach -ti nginx  -c shell</span><br><span class="line"></span><br><span class="line">ps ax</span><br><span class="line"></span><br><span class="line">可以看到三个Container所有的正在运行的进程，包括nginx，sh，以及Infra的/pause进程</span><br></pre></td></tr></table></figure></p>
+<h3 id="shareProcessNamespace-true"><a href="#shareProcessNamespace-true" class="headerlink" title="shareProcessNamespace=true"></a>shareProcessNamespace=true</h3><p>Pod的设计就是让里面容器尽可能多的共享Linux Namespace，仅保留必要的隔离和限制能力。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.8</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">shell</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">busybox</span></span><br><span class="line"><span class="attr">    stdin:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    tty:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>上面这个文件定义了两个Pod，一个是nginx容器，一个是开启了tty和stdin的shell容器。tty和stdin相当于docker run的-it，tty是Linux提供给用户的一个常驻小程序，接收用户的标准输入，返回操作系统标准输出，为了能在tty中输入信息，需要开启stdin。<br>使用如下命令进入可以观察到</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl attach -ti nginx  -c shell</span><br><span class="line"></span><br><span class="line">ps ax</span><br><span class="line"></span><br><span class="line">可以看到三个Container所有的正在运行的进程，包括nginx，sh，以及Infra的/pause进程</span><br></pre></td></tr></table></figure>
 <p><img src="https://user-images.githubusercontent.com/20592210/55094365-3ea74200-50f1-11e9-80d7-a38b555cc422.png" alt="image"></p>
-<p>没有这个shareProcessNamespace属性可以看到输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#进入shell这个容器</span><br><span class="line">kubectl attach -ti nginx  -c shell</span><br></pre></td></tr></table></figure></p>
+<p>没有这个shareProcessNamespace属性可以看到输出如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>进入shell这个容器</span><br><span class="line">kubectl attach -ti nginx  -c shell</span><br></pre></td></tr></table></figure>
 <p><img src="https://user-images.githubusercontent.com/20592210/55094104-b1fc8400-50f0-11e9-96ff-407aa2a288c2.png" alt="image"></p>
 <h3 id="Containers字段"><a href="#Containers字段" class="headerlink" title="Containers字段"></a>Containers字段</h3><ul>
 <li>image 制定镜像</li>
@@ -383,7 +413,7 @@
 <li>imagePullPolicy 容器拉取镜像策略 Always, Never, IfNotPresent. Defaults to Always</li>
 <li>lifecycle 定义的是容器的Container Lifecycle Hooks，就像我们的Spring容器一样，创建完和销毁之前都可以监听到</li>
 </ul>
-<p>lifecycle有两个生命周期<br>postStart和preStop两种  </p>
+<p>lifecycle有两个生命周期<br>postStart和preStop两种</p>
 <ul>
 <li>postStart 容器启动之后立即执行一个指定的操作，但是只是Docker容器的ENTRYPOINT执行之后，也就是并不是一定是ENTRYPOINT执行完成之后<br>这俩生命周期你能干啥呢？</li>
 <li>preStop 容器被杀死之前执行，但是这是个同步操作，也就是这个操作执行完了之后才会去停止容器</li>
@@ -400,20 +430,22 @@
 <li>Unknown Pod的状态不能支持被kubelet报告给kube-apiserver，多半是Master和Kubelet通信出现了问题</li>
 </ol>
 <p>Status还可以细分为Conditions，包括PodScheduled、Ready、Initialized，Unschedulable<br>比如Status是Pending，Condition是Unschedulable，就是调度出现了问题</p>
-<p>执行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod pod-name</span><br></pre></td></tr></table></figure></p>
+<p>执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod pod-name</span><br></pre></td></tr></table></figure>
 <p>看到下面这四个Ready、Initialized、ContainersReady、PodScheduled都为True才是真的Pod成功启动<br><img src="https://user-images.githubusercontent.com/20592210/55093298-27675500-50ef-11e9-88fc-06eed3542ba1.png" alt="image"></p>
-<p>###livenessProbe<br>livenessProbe还有http请求，tcpSocket等多种方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    test: liveness</span><br><span class="line">  name: test-liveness-exec</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: liveness</span><br><span class="line">      image: busybox</span><br><span class="line">      args:</span><br><span class="line">        - /bin/sh</span><br><span class="line">        - -c</span><br><span class="line">        - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600</span><br><span class="line">      livenessProbe:</span><br><span class="line">        exec:</span><br><span class="line">          command:</span><br><span class="line">            - cat</span><br><span class="line">            - /tmp/healthy</span><br><span class="line">        initialDelaySeconds: 5</span><br><span class="line">        periodSeconds: 5</span><br></pre></td></tr></table></figure></p>
+<h3 id="livenessProbe"><a href="#livenessProbe" class="headerlink" title="livenessProbe"></a>livenessProbe</h3><p>livenessProbe还有http请求，tcpSocket等多种方式</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    test:</span> <span class="string">liveness</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">test-liveness-exec</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">liveness</span></span><br><span class="line"><span class="attr">      image:</span> <span class="string">busybox</span></span><br><span class="line"><span class="attr">      args:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">/bin/sh</span></span><br><span class="line"><span class="bullet">        -</span> <span class="bullet">-c</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">touch</span> <span class="string">/tmp/healthy;</span> <span class="string">sleep</span> <span class="number">30</span><span class="string">;</span> <span class="string">rm</span> <span class="bullet">-rf</span> <span class="string">/tmp/healthy;</span> <span class="string">sleep</span> <span class="number">600</span></span><br><span class="line"><span class="attr">      livenessProbe:</span></span><br><span class="line"><span class="attr">        exec:</span></span><br><span class="line"><span class="attr">          command:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">cat</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">/tmp/healthy</span></span><br><span class="line"><span class="attr">        initialDelaySeconds:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">        periodSeconds:</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
 <p>这个Pod容器大概做了些啥妖呢。。启动之后创建一个healthy文件，30s后删了</p>
 <p>livenessProbe作为健康状态探测指针，我们指定为exec即执行命令</p>
 <blockquote>
 <p>linux命令命令执行成功返回值为0，不成功为非0<br>这个探针如果发现cat文件存在，就认为Pod不但已经启动，而且还是健康的，initialDelaySeconds代表启动5秒后执行第一次，后面每5s执行一次。</p>
 </blockquote>
-<p>将上面文件使用如下命令运行起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f xxx.yaml</span><br></pre></td></tr></table></figure></p>
+<p>将上面文件使用如下命令运行起来</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kubectl</span> <span class="string">apply</span> <span class="bullet">-f</span> <span class="string">xxx.yaml</span></span><br></pre></td></tr></table></figure>
 <p>前面几分钟都能检测到虽然restart次数在增加，但是还是Running状态</p>
 <p>过了几分钟使用<code>kubectl describe pod test-liveness-exec</code>看到如下的events<br><img src="https://user-images.githubusercontent.com/20592210/55173833-5943ee80-51b7-11e9-8aee-e98d337362bc.png" alt="image"></p>
 <p>livenessProbe探测到容器不健康会一直重启</p>
-<p>###restartPolicy</p>
-<p>Pod也有缺点，Pod如果真的出现异常，你可以看到pod的restart次数更改，因为Pod有个字段叫做restartPolicy，默认是Always。</p>
+<h3 id="restartPolicy"><a href="#restartPolicy" class="headerlink" title="restartPolicy"></a>restartPolicy</h3><p>Pod也有缺点，Pod如果真的出现异常，你可以看到pod的restart次数更改，因为Pod有个字段叫做restartPolicy，默认是Always。</p>
 <p>容器发生异常就会重新创建，Pod的恢复过程，永远会发生在当前节点上，即便是节点宕机，除非pod.spec.node发生改变，不然不会发生改变，这也就是单个Pod和由Deployment创建的Pod区别。</p>
 <p>restartPolicy：</p>
 <ul>
@@ -440,6 +472,8 @@
         <div class="post-tags">
           
             <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+            <a href="/tags/DevOps/" rel="tag"># DevOps</a>
           
         </div>
       
@@ -544,13 +578,22 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
 
             
               
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -583,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要Pod而不是Container"><span class="nav-number">2.</span> <span class="nav-text">为什么需要Pod而不是Container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod的实现原理"><span class="nav-number">3.</span> <span class="nav-text">Pod的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明式文件"><span class="nav-number">4.</span> <span class="nav-text">声明式文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字段介绍"><span class="nav-number">4.1.</span> <span class="nav-text">字段介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NodeSelector：一个将Pod与Node进行绑定的字段"><span class="nav-number">4.1.1.</span> <span class="nav-text">NodeSelector：一个将Pod与Node进行绑定的字段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><span class="nav-number">4.2.</span> <span class="nav-text">HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shareProcessNamespace-true"><span class="nav-number">4.3.</span> <span class="nav-text">shareProcessNamespace=true</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Containers字段"><span class="nav-number">4.4.</span> <span class="nav-text">Containers字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod的声明周期-Status"><span class="nav-number">4.5.</span> <span class="nav-text">Pod的声明周期-Status</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S-Pod"><span class="nav-number">1.</span> <span class="nav-text">K8S-Pod</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要Pod而不是Container"><span class="nav-number">1.2.</span> <span class="nav-text">为什么需要Pod而不是Container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod的实现原理"><span class="nav-number">1.3.</span> <span class="nav-text">Pod的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明式文件"><span class="nav-number">1.4.</span> <span class="nav-text">声明式文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字段介绍"><span class="nav-number">1.4.1.</span> <span class="nav-text">字段介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NodeSelector：一个将Pod与Node进行绑定的字段"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">NodeSelector：一个将Pod与Node进行绑定的字段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HostAliases：定义了Pod的hosts文件（相当于-etc-hosts）里的内容"><span class="nav-number">1.4.2.</span> <span class="nav-text">HostAliases：定义了Pod的hosts文件（相当于 /etc/hosts）里的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shareProcessNamespace-true"><span class="nav-number">1.4.3.</span> <span class="nav-text">shareProcessNamespace=true</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Containers字段"><span class="nav-number">1.4.4.</span> <span class="nav-text">Containers字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod的声明周期-Status"><span class="nav-number">1.4.5.</span> <span class="nav-text">Pod的声明周期-Status</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#livenessProbe"><span class="nav-number">1.4.6.</span> <span class="nav-text">livenessProbe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#restartPolicy"><span class="nav-number">1.4.7.</span> <span class="nav-text">restartPolicy</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

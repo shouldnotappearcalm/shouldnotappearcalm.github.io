@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="k8s," />
+  <meta name="keywords" content="k8s,DevOps," />
 
 
 
@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
-<meta name="keywords" content="k8s">
+<meta name="description" content="K8S-基础组件集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运">
+<meta name="keywords" content="k8s,DevOps">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s系列-k8s基础">
 <meta property="og:url" content="http://losergzr.cn/2019/03/25/k8s系列-k8s基础/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
+<meta property="og:description" content="K8S-基础组件集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55176584-58fa2200-51bc-11e9-96fe-697a557a9141.png">
 <meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/borg.png">
 <meta property="og:image" content="https://jimmysong.io/kubernetes-handbook/images/architecture.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/54933568-d8d38280-4f57-11e9-9fb9-2820e35ecd56.png">
-<meta property="og:updated_time" content="2019-03-28T16:48:34.210Z">
+<meta property="og:updated_time" content="2019-03-31T14:29:23.126Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-k8s基础">
-<meta name="twitter:description" content="集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。">
+<meta name="twitter:description" content="K8S-基础组件集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/55176584-58fa2200-51bc-11e9-96fe-697a557a9141.png">
 
 
@@ -308,6 +308,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -335,15 +357,16 @@
       
 
       
-        <p>集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。比如集成日志组件和监控组件等。K8S支持5000个节点。<br><a id="more"></a><br><img src="https://user-images.githubusercontent.com/20592210/55176584-58fa2200-51bc-11e9-96fe-697a557a9141.png" alt="image"></p>
+        <h1 id="K8S-基础组件"><a href="#K8S-基础组件" class="headerlink" title="K8S-基础组件"></a>K8S-基础组件</h1><p>集群容器编排经过Swarm，Mesos，K8S的竞争，最终kubernetes以大优势胜出。Kubernetes最初源于谷歌内部的Borg，提供了面向应用的容器集群部署和管理系统。Kubernetes的目标旨在消除编排物理/虚拟计算，网络和存储基础设施的负担，并使应用程序运营商和开发人员完全将重点放在以容器为中心的原语上进行自助运营。K8S提供完善的管理工具，涵盖开发、部署测试、运维监控各个环节。比如集成日志组件和监控组件等。K8S支持5000个节点。<br><a id="more"></a><br><img src="https://user-images.githubusercontent.com/20592210/55176584-58fa2200-51bc-11e9-96fe-697a557a9141.png" alt="image"></p>
 <h2 id="Borg系统介绍"><a href="#Borg系统介绍" class="headerlink" title="Borg系统介绍"></a>Borg系统介绍</h2><p>Borg是google内部大规模集群管理系统，负责对google内部很多核心服务的调度和管理，让用户专注于自己的核心业务。Borg主要由BorgMaster，Borglet，borgcfg，Scheduler组成</p>
-<p><img src="https://jimmysong.io/kubernetes-handbook/images/borg.png" alt=""></p>
+<p><img src="https://jimmysong.io/kubernetes-handbook/images/borg.png" alt="支持规格"></p>
 <ul>
 <li>BorgMaster是集群的大脑，负责维护整个集群的状态，将数据存储到Paxos存储中</li>
 <li>Scheduler负责任务的调度，根据应用的特点调度到具体的机器上去</li>
 <li>Borglet负责真正的运行任务</li>
-<li>borgcfg是Borg的命令行工具，用于跟Borg系统交互，一般通过一个配置文件来提交任务<h2 id="Kubernetes基础组件"><a href="#Kubernetes基础组件" class="headerlink" title="Kubernetes基础组件"></a>Kubernetes基础组件</h2>Kubernetes也是google开源的一个项目，所以正是有borg系统借鉴而来，整体架构与borg系统非常相似。K8S不同于Swarm和Mesos，他一开始就站在让他们无法企及的高度上，借鉴的同时也修复了很多在Borg中遗留的缺陷和问题。</li>
+<li>borgcfg是Borg的命令行工具，用于跟Borg系统交互，一般通过一个配置文件来提交任务</li>
 </ul>
+<h2 id="Kubernetes基础组件"><a href="#Kubernetes基础组件" class="headerlink" title="Kubernetes基础组件"></a>Kubernetes基础组件</h2><p>Kubernetes也是google开源的一个项目，所以正是有borg系统借鉴而来，整体架构与borg系统非常相似。K8S不同于Swarm和Mesos，他一开始就站在让他们无法企及的高度上，借鉴的同时也修复了很多在Borg中遗留的缺陷和问题。</p>
 <p><img src="https://jimmysong.io/kubernetes-handbook/images/architecture.png" alt="kubernetes架构"><br>kubernetes主要有如下核心组件</p>
 <ul>
 <li>ectd保存整个集群的状态和配置，所有节点都从etcd中获取其他机器状态也保存自己的状态</li>
@@ -364,17 +387,17 @@
 </ul>
 <ol>
 <li>Borg系统虽然与k8s项目不相同，但是出发点都一样，如何管理、编排、调度用户提交的作业。<br>对于google来说，docker的出现只不过是让他们换了一种打包方式，大规模作业管理和调度的思路可以直接套在k8s上。</li>
-<li>k8s并不是把Docker作为一种核心架构，只是作为一种底层容器的实现而已。<blockquote>
+<li>k8s并不是把Docker作为一种核心架构，只是作为一种底层容器的实现而已。</li>
+</ol>
+<blockquote>
 <p>运行在大规模集群中各种任务之间，实际上存在各种关系，这些关系的处理，才是作业编排和管理系统最困难的地方。</p>
 </blockquote>
-</li>
-</ol>
 <p>平时场景中随处可见这种依赖关系场景，比如一个web应用和数据库，负载均衡和代理的后端服务，一般情况下来说都会把这些依赖关系的服务部署在一个机子上，容器技术出现后，原先挤在一台机子上的各个应用、组件、守护进程都可以分别做成镜像运行，容器隔离互不干涉，有自己的资源配额，运行在集群的任何一台机器上。</p>
 <h2 id="Kubernetes资源组件介绍"><a href="#Kubernetes资源组件介绍" class="headerlink" title="Kubernetes资源组件介绍"></a>Kubernetes资源组件介绍</h2><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>Kubernetes中最小的调度单位不再是容器，而是一个Pod，Pod里面可以有多个容器,比如两个应用之间需要非常频繁的交互和访问，或者直接通过本地文件进行信息交换，这种情况就可以使用Pod部署两个容器进去。</p>
 <h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>Kubernetes中因为应用常常不在一台机器上，通常情况下如果某一台节点宕机，上面的所有Pod会根据资源需求在最合适的节点上重新启动起来，这也就造成了IP地址的不稳定性，比如我们现在部署一个数据库Pod和web应用Pod，web配置了数据库Pod的IP地址，万一数据库Pod所在节点宕机，则会被调度到其他节点进行重启，IP地址发生改变，这种情况下就需要Service服务这个概念了，Service类似负载均衡器，可以帮助我们代理Pod不管Pod在哪个节点上运行，都能通过配置对应的Service来找到。web应用只需要关心Service的信息而不需要关系到数据库Pod当前的IP等信息。</p>
 <h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><p>光有了pod还不够，我如何一次行新建多个pod做高可用，如何更新pod中镜像版本，k8s中，新建pod主要通过声明式的配置，要新建一个Pod时不应该通过运行命令的方式来新建出这个Pod，而且应该通过定义声明式文件来新建Pod，就比如可以声明一个Deployment类型的声明式文件，比如下面这种</p>
 <p>制定pod的副本数量为3，为pod打上一个标签 app=nginx，指定container的名字为nginx，pod使用镜像为1.7.9版本的nginx，指定container端口为80  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx:1.7.9</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="attr">nginx:1.7.9</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 <h3 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h3><p>StatefulSet顾名思义，主要用来解决有状态服务的问题，Deployment针对无状态服务。比如像zookeeper和kafka等。<br>StatefulSet适用于有以下某个或多个需求的应用：</p>
 <ul>
 <li>稳定，唯一的网络标志</li>
@@ -432,6 +455,8 @@
         <div class="post-tags">
           
             <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+            <a href="/tags/DevOps/" rel="tag"># DevOps</a>
           
         </div>
       
@@ -540,13 +565,22 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
 
             
               
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -579,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Borg系统介绍"><span class="nav-number">1.</span> <span class="nav-text">Borg系统介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes基础组件"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes基础组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes资源组件介绍"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes资源组件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">3.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">3.2.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deployment"><span class="nav-number">3.3.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StatefulSet"><span class="nav-number">3.4.</span> <span class="nav-text">StatefulSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DaemonSet"><span class="nav-number">3.5.</span> <span class="nav-text">DaemonSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job"><span class="nav-number">3.6.</span> <span class="nav-text">Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CronJob"><span class="nav-number">3.7.</span> <span class="nav-text">CronJob</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Horizontal-Pod-Autoscaling"><span class="nav-number">3.8.</span> <span class="nav-text">Horizontal Pod Autoscaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress"><span class="nav-number">3.9.</span> <span class="nav-text">Ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConfigMap"><span class="nav-number">3.10.</span> <span class="nav-text">ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Secret"><span class="nav-number">3.11.</span> <span class="nav-text">Secret</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-number">3.12.</span> <span class="nav-text">Label</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Taint和Toleration"><span class="nav-number">3.13.</span> <span class="nav-text">Taint和Toleration</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S-基础组件"><span class="nav-number">1.</span> <span class="nav-text">K8S-基础组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Borg系统介绍"><span class="nav-number">1.1.</span> <span class="nav-text">Borg系统介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes基础组件"><span class="nav-number">1.2.</span> <span class="nav-text">Kubernetes基础组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes资源组件介绍"><span class="nav-number">1.3.</span> <span class="nav-text">Kubernetes资源组件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">1.3.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">1.3.2.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deployment"><span class="nav-number">1.3.3.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StatefulSet"><span class="nav-number">1.3.4.</span> <span class="nav-text">StatefulSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DaemonSet"><span class="nav-number">1.3.5.</span> <span class="nav-text">DaemonSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job"><span class="nav-number">1.3.6.</span> <span class="nav-text">Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CronJob"><span class="nav-number">1.3.7.</span> <span class="nav-text">CronJob</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Horizontal-Pod-Autoscaling"><span class="nav-number">1.3.8.</span> <span class="nav-text">Horizontal Pod Autoscaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress"><span class="nav-number">1.3.9.</span> <span class="nav-text">Ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConfigMap"><span class="nav-number">1.3.10.</span> <span class="nav-text">ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Secret"><span class="nav-number">1.3.11.</span> <span class="nav-text">Secret</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-number">1.3.12.</span> <span class="nav-text">Label</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Taint和Toleration"><span class="nav-number">1.3.13.</span> <span class="nav-text">Taint和Toleration</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
