@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DevOps,k8s," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="K8S-Deployment介绍Kubernetes最核心的功能：编排Pod本质上是对容器进一步的抽象和封装，容器就好像我们平时了解到的集装箱一样，集装箱虽然好用，但是四面光秃秃的，吊车怎么来吊集装箱并且把它摆好呢？Pod对象就好像是加装了吊环的集装箱，让吊车（Kubernetes）能够能够更好的操作它，Kubernetes怎么操作它呢，就是由控制器（Controller），最常用的控制器Depl">
+<meta name="keywords" content="DevOps,k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s系列-Deployment">
+<meta property="og:url" content="http://losergzr.cn/2019/04/05/k8s系列-Deployment/index.html">
+<meta property="og:site_name" content="losergzr&#39;s blog">
+<meta property="og:description" content="K8S-Deployment介绍Kubernetes最核心的功能：编排Pod本质上是对容器进一步的抽象和封装，容器就好像我们平时了解到的集装箱一样，集装箱虽然好用，但是四面光秃秃的，吊车怎么来吊集装箱并且把它摆好呢？Pod对象就好像是加装了吊环的集装箱，让吊车（Kubernetes）能够能够更好的操作它，Kubernetes怎么操作它呢，就是由控制器（Controller），最常用的控制器Depl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55671530-79646380-58c3-11e9-82a1-2ab85f20cef7.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55671584-16bf9780-58c4-11e9-8940-ea346ca43fdd.png">
+<meta property="og:updated_time" content="2019-04-06T16:33:07.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s系列-Deployment">
+<meta name="twitter:description" content="K8S-Deployment介绍Kubernetes最核心的功能：编排Pod本质上是对容器进一步的抽象和封装，容器就好像我们平时了解到的集装箱一样，集装箱虽然好用，但是四面光秃秃的，吊车怎么来吊集装箱并且把它摆好呢？Pod对象就好像是加装了吊环的集装箱，让吊车（Kubernetes）能够能够更好的操作它，Kubernetes怎么操作它呢，就是由控制器（Controller），最常用的控制器Depl">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/55671530-79646380-58c3-11e9-82a1-2ab85f20cef7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://losergzr.cn/2019/04/05/k8s系列-Deployment/"/>
+
+
+
+
+
+  <title>k8s系列-Deployment | losergzr's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">losergzr's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/05/k8s系列-Deployment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">k8s系列-Deployment</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-05T10:49:43+08:00">
+                2019-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="K8S-Deployment"><a href="#K8S-Deployment" class="headerlink" title="K8S-Deployment"></a>K8S-Deployment</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>Kubernetes</code>最核心的功能：<strong>编排</strong><br><code>Pod</code>本质上是对容器进一步的抽象和封装，容器就好像我们平时了解到的集装箱一样，集装箱虽然好用，但是四面光秃秃的，吊车怎么来吊集装箱并且把它摆好呢？Pod对象就好像是加装了吊环的集装箱，让吊车（Kubernetes）能够能够更好的操作它，<code>Kubernetes</code>怎么操作它呢，就是由控制器（Controller），最常用的控制器Deployment。</p>
+<a id="more"></a>
+<p>下面是一个简单的名为<code>nginx-deployment</code>的例子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="attr">nginx:1.7.9</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<p>上面这个Deployment的编排很简单，确保带有标签<code>app=nginx</code>的Pod只有两个，等于<code>spec.replicas</code>指定的个数。</p>
+<p>集群中如果有携带标签<code>app=nginx</code>的Pod被删除，就会有新的Pod创建起来，跟之前被删除的Pod属性一样。</p>
+<p>这个动作能够执行全靠一个名为<code>kube-controller-manager</code>的组件，controller有很多种，比如下面的</p>
+<ul>
+<li>deployment</li>
+<li>job</li>
+<li>statefulset</li>
+<li>replicaset</li>
+<li>cronjob</li>
+<li>service</li>
+<li>volume</li>
+<li>···</li>
+</ul>
+<p>这些控制器之所以都放在controller下面，是因为他们都遵循Kubernetes项目的一个通用编排模式，控制循环。</p>
+<p>比如用下面的这样一段伪代码可以解释一下什么叫做控制循环，一个待编排的对象的X。带有一个控制器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">  实际状态 = 获取集群中对象X的实际状态（Actual State）</span><br><span class="line">  期望状态 = 获取集群中对象X的期望状态（Desired State）</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (实际状态 == 期望状态) &#123;</span><br><span class="line">  什么都不做</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  执行编排动作，将实际状态调整为期望状态</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际状态往往来自于<code>Kubernetes</code>集群本身，<code>kubelet</code>通过心跳汇报容器状态和节点状态，或者是监控系统保存的应用监控数据，或者是控制器主动收集自己感兴趣的信息。<strong>期望状态</strong>一般就是提交的YAML了。</p>
+<p>比如<code>Deployment</code>对象的<code>Replicas</code>字段的值就往往是保存在<code>Etcd</code>中。</p>
+<h2 id="Deployment详解"><a href="#Deployment详解" class="headerlink" title="Deployment详解"></a>Deployment详解</h2><h3 id="控制器模型的实现"><a href="#控制器模型的实现" class="headerlink" title="控制器模型的实现"></a>控制器模型的实现</h3><p>仍然以上面的名为nginx-deployment为例</p>
+<ol>
+<li><p><code>Deployment</code>控制器从Etcd中获取所有携带<code>app:nginx</code>标签的Pod，并且统计数量，这个就是实际状态。</p>
+</li>
+<li><p><code>Deployment</code>对象的<code>Replicas</code>字段就是期望值。</p>
+</li>
+<li><p><code>Deployment</code>控制器将两个状态作比较，根据比较的状态，执行类似上文的伪代码，判断是要新增Pod还是删除Pod。</p>
+</li>
+</ol>
+<p>这个操作通常被叫做调谐（<code>Reconcile</code>），这个调谐的过程被称作<code>Reconcile Loop</code>（调谐循环）或者<code>Sync Loop</code>(同步循环)，就像增加Pod，删除Pod，更新Pod这些都算是Kubernetes中<strong>面向API对象编程</strong>的一个直观体现。</p>
+<p>控制器本身负责定义被管理对象的期望状态，比如<code>replicas</code>字段，被控制的对象则来自于一个模板，<code>Deployment</code>的<code>template</code>字段，这个<code>template</code>字段的属性跟标准的Pod定义丝毫不差，<code>Deployment</code>的<code>template</code>字段在Kubernetes中有个专有的名字叫做<code>PodTemplate</code>（Pod模板）</p>
+<h2 id="Deployment的水平扩展和收缩"><a href="#Deployment的水平扩展和收缩" class="headerlink" title="Deployment的水平扩展和收缩"></a>Deployment的水平扩展和收缩</h2><h3 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a>ReplicaSet</h3><h4 id="ReplicaSet简介"><a href="#ReplicaSet简介" class="headerlink" title="ReplicaSet简介"></a>ReplicaSet简介</h4><p>如果你更新了Deployment的Pod模板，比如你修改了镜像的版本，那么Deployment就需要要遵循一种叫做<strong>滚动更新</strong>的策略还更新控制器，而这个能力的实现就是依靠<code>ReplicaSet</code></p>
+<h4 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h4><p>还是从上面的名为<code>nginx-deployment</code>的例子说到<code>ReplicaSet</code></p>
+<h5 id="先使用如下命令创建nginx-deployment这个Deployment"><a href="#先使用如下命令创建nginx-deployment这个Deployment" class="headerlink" title="先使用如下命令创建nginx-deployment这个Deployment"></a>先使用如下命令创建<code>nginx-deployment</code>这个<code>Deployment</code></h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f nginx-deployment.yml</span><br></pre></td></tr></table></figure>
+<h5 id="查看ReplicaSet状态"><a href="#查看ReplicaSet状态" class="headerlink" title="查看ReplicaSet状态"></a>查看ReplicaSet状态</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 先使用如下命令等待Deployment都Running起来</span><br><span class="line">kubectl get Deployment</span><br><span class="line"><span class="meta">#</span> 使用如下命令获取到所有的ReplicaSet</span><br><span class="line">kubectl get rs</span><br><span class="line"></span><br><span class="line">NAME                          DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx-54458cd494              4         4         4       18d</span><br><span class="line">nginx-deployment-76bf4969df   3         3         3       3d22h</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>再如下命令编辑上文列表中的这个ReplicaSet nginx-deployment-76bf4969df</span><br><span class="line">kubectl edit rs nginx-deployment-76bf4969df</span><br></pre></td></tr></table></figure>
+<p>获取到结果如下<br><img src="https://user-images.githubusercontent.com/20592210/55671530-79646380-58c3-11e9-82a1-2ab85f20cef7.png" alt="image"></p>
+<p>从图中可以大概看出来<code>ReplicaSet</code>对象就是由副本数目定义和一个Pod模板组成的，是<code>Deployment</code>的一个子集，重要的是，<code>Deployment</code>操作的是<code>ReplicaSet</code>对象，而不是直接操作的<code>Pod</code></p>
+<h5 id="分析ReplicaSet"><a href="#分析ReplicaSet" class="headerlink" title="分析ReplicaSet"></a>分析ReplicaSet</h5><p>还是从上面的Deployment说起</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="attr">nginx:1.7.9</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<p>在这个副本数量为3的控制器中，<code>Deployment</code>，<code>ReplicaSet</code>和<code>Pod</code>的关系是怎么样的</p>
+<p><img src="https://user-images.githubusercontent.com/20592210/55671584-16bf9780-58c4-11e9-8940-ea346ca43fdd.png" alt="image"></p>
+<p>从上图中我么就可以看到，其实<code>Deployment</code>并不直接关系到<code>Pod</code>，他是通过<code>ReplicaSet</code>间接操控<code>Pod</code>，其中<code>ReplicaSet</code>通过控制器模式保证集群中Pod的数量是期望的值那样，这也正是<code>Deployment</code>只允许容器的<code>restartPolicy=Always</code>的主要原因，只有在容器保证自己始终是Running的情况下，调整<code>Pod</code>的个数才有意义</p>
+<h6 id="水平扩展-收缩"><a href="#水平扩展-收缩" class="headerlink" title="水平扩展/收缩"></a>水平扩展/收缩</h6><p>在此基础上，<code>Deployment</code>同样通过控制器模式来操控<code>ReplicaSet</code>的个数和属性，进行”水平收缩/扩展“和“滚动更新”这两个编排动作。在<code>Deployment</code>中水平收缩扩展比较容易实现，只需要修改<code>ReplicaSet</code>的<code>Pod</code>副本个数就可以了。</p>
+<p>想要实现这个操作很简单，看下面的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 第一种方式：使用scale命令进行扩展</span><br><span class="line">kubectl scale deployment nginx-deployment --replicas=4</span><br><span class="line"><span class="meta">#</span> 再使用如下命令就可以看到Deployment个数进行了增长</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">nginx-deployment   4/4     4            4           3d23h</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 第二种方式： 修改yml文件的replicas属性为4，再执行下面的命令</span><br><span class="line">kubectl apply -f nginx-deployment.yml</span><br><span class="line"><span class="meta">#</span> 也能看到Pod个数变成了4</span><br></pre></td></tr></table></figure>
+<h6 id="滚动更新"><a href="#滚动更新" class="headerlink" title="滚动更新"></a>滚动更新</h6><p>我们如下命令对<code>Deployment</code>进行删除，并且在重建的时候加上<code>--record</code>参数,这个参数为了记录你每次操作执行的命令方便以后查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 先删除</span><br><span class="line">kubectl delete -f nginx-deployment.yml</span><br><span class="line"><span class="meta">#</span> 重建</span><br><span class="line">kubectl apply -f nginx-deployment.yml --record</span><br><span class="line"><span class="meta">#</span> 查看创建好的Deployment</span><br><span class="line">kubectl get Deployment</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">nginx-deployment   3/3     3            3           73s</span><br></pre></td></tr></table></figure>
+<p>从上面的输出中可以看到，这个<code>Deployment</code>有四个状态字段：</p>
+<ol>
+<li>DESIRED：用户期望的Pod副本个数（spec.replicas）</li>
+<li>READY：当前处于Running状态的Pod数量</li>
+<li>UP-TO-DATE：当前处于最新版本Pod的个数，所谓最新版本是指Pod的Spec部分跟Deployment里模板定义的一样。（可以会存在正在进行滚动更新还没删除的老Pod）</li>
+<li>AVAILABLE：当前已经可用的Pod个数，既是Running状态，有事最新版本，而且已经处于Ready状态的Pod个数，这个属性才是我们最为期待成功的属性</li>
+</ol>
+<p>我们再来尝试查看这个ReplicaSet</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl get rs</span><br><span class="line">NAME                          DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx-deployment-76bf4969df   3         3         3       7m18s</span><br></pre></td></tr></table></figure>
+<p>如上所示用户提交<code>Deployment</code>对象之后，<code>Deployment Controller</code>为立即创建一个副本数为3的<code>ReplicaSet</code>，这个<code>ReplicaSet</code>的名字是<code>Deployment</code>名字和一个随机字符串组成的，这个随机字符串叫做<code>pod-template-hash</code>。同时<code>Pod</code>也会加上这个字符串用于跟其他的Pod进行区分。通过这个列表可以看到，<code>Deployment</code>只是比<code>ReplicaSet</code>多了一个<code>UP-TO-DATE</code>字段</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>可以使用如下命令看看Pod</span><br><span class="line">[root@localhost home]# kubectl get pod</span><br><span class="line">NAME                                READY   STATUS    RESTARTS   AGE</span><br><span class="line">host-pod                            1/1     Running   3          8d</span><br><span class="line">nginx                               2/2     Running   10         9d</span><br><span class="line">nginx-54458cd494-79ntm              1/1     Running   1          3d23h</span><br><span class="line">nginx-54458cd494-h92mx              1/1     Running   9          18d</span><br><span class="line">nginx-54458cd494-k4qwk              1/1     Running   1          3d23h</span><br><span class="line">nginx-54458cd494-sddb4              1/1     Running   9          18d</span><br><span class="line">nginx-deployment-76bf4969df-8xmr9   1/1     Running   0          25m</span><br><span class="line">nginx-deployment-76bf4969df-n89x8   1/1     Running   0          25m</span><br><span class="line">nginx-deployment-76bf4969df-plc4q   1/1     Running   0          25m</span><br></pre></td></tr></table></figure>
+<p>如果这个时候我修改了<code>Deployment</code>的<code>Pod</code>模板，就会触发滚动更新操作，比如使用<code>kubectl edit</code>命令或者还是修改yaml文件再执行<code>kubectl apply</code></p>
+<p>这里我使用<code>kubectl edit</code>命令，升级<code>nginx</code>版本到<code>1.9.1</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl edit deployment/nginx-deployment</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 自动进入编辑器模式，修改镜像版本那一行为1.9.1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>我这边是vi打开的，使用 :wq 保存退出</span><br></pre></td></tr></table></figure>
+<p><code>kubectl edit</code>编辑完保存退出之后，Kubernetes会马上触发滚动更新流程</p>
+<p>通过如下命令可以看到滚动更新的流程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl describe deployment nginx-deployment</span><br><span class="line"></span><br><span class="line">Events:</span><br><span class="line">  Type    Reason             Age    From                   Message</span><br><span class="line">  ----    ------             ----   ----                   -------</span><br><span class="line">  Normal  ScalingReplicaSet  34m    deployment-controller  Scaled up replica set nginx-deployment-76bf4969df to 3</span><br><span class="line">  Normal  ScalingReplicaSet  2m48s  deployment-controller  Scaled up replica set nginx-deployment-779fcd779f to 1</span><br><span class="line">  Normal  ScalingReplicaSet  2m26s  deployment-controller  Scaled down replica set nginx-deployment-76bf4969df to 2</span><br><span class="line">  Normal  ScalingReplicaSet  2m26s  deployment-controller  Scaled up replica set nginx-deployment-779fcd779f to 2</span><br><span class="line">  Normal  ScalingReplicaSet  2m25s  deployment-controller  Scaled down replica set nginx-deployment-76bf4969df to 1</span><br><span class="line">  Normal  ScalingReplicaSet  2m25s  deployment-controller  Scaled up replica set nginx-deployment-779fcd779f to 3</span><br><span class="line">  Normal  ScalingReplicaSet  2m23s  deployment-controller  Scaled down replica set nginx-deployment-76bf4969df to 0</span><br></pre></td></tr></table></figure>
+<p>从Events中可以看出来，首先修改了Deployment的定义之后，Deployment Controller会根据模板的定义创建一个新的ReplicaSet，也就是这里的<code>nginx-deployment-779fcd779f</code>，老的ReplicaSet是<code>nginx-deployment-76bf4969df</code></p>
+<ul>
+<li>2m48s,这个新的ReplicaSet控制的Pod副本数从0变成1，即水平扩展出一个副本</li>
+<li>紧接着在2m26s时，将老的ReplicaSet控制的Pod数从3变成了2，水平收缩成两个副本</li>
+<li>如此交替运行，一个扩，一个收</li>
+</ul>
+<p>现在你在使用下面的命令查看可以看到从以前的2个ReplicaSet变成了3个ReplicaSet,旧的ReplicaSet每个属性的值都变成了0</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl get rs</span><br><span class="line">NAME                          DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx-54458cd494              4         4         4       18d</span><br><span class="line">nginx-deployment-76bf4969df   0         0         0       35m</span><br><span class="line">nginx-deployment-779fcd779f   3         3         3       4m19s</span><br></pre></td></tr></table></figure>
+<h6 id="滚动更新的优势"><a href="#滚动更新的优势" class="headerlink" title="滚动更新的优势"></a>滚动更新的优势</h6><p>比如在刚开始升级的时候，集群里只有1个新增的新版本Pod，这个新Pod启动不起来，滚动更新就停止了，从而开发和运维介入，这个介入结束之前都还是有两个旧的Pod在运行，所以服务并不会收到太多的影响。</p>
+<p>这种情况也必须依赖于Pod使用Health Check检查应用的运行状态，而不是简单的依赖于容器的Running状态，要不然虽然容器可能已经Running了，但是服务可能还是没启动，那滚动更新的效果就达不到了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DevOps/" rel="tag"># DevOps</a>
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/26/k8s系列-pod/" rel="next" title="k8s系列-Pod">
+                <i class="fa fa-chevron-left"></i> k8s系列-Pod
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ggzr</p>
+              <p class="site-description motion-element" itemprop="description">一只咸鱼的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S-Deployment"><span class="nav-number">1.</span> <span class="nav-text">K8S-Deployment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deployment详解"><span class="nav-number">1.2.</span> <span class="nav-text">Deployment详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#控制器模型的实现"><span class="nav-number">1.2.1.</span> <span class="nav-text">控制器模型的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deployment的水平扩展和收缩"><span class="nav-number">1.3.</span> <span class="nav-text">Deployment的水平扩展和收缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ReplicaSet"><span class="nav-number">1.3.1.</span> <span class="nav-text">ReplicaSet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ReplicaSet简介"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">ReplicaSet简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详解"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">详解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#先使用如下命令创建nginx-deployment这个Deployment"><span class="nav-number">1.3.1.2.1.</span> <span class="nav-text">先使用如下命令创建nginx-deployment这个Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看ReplicaSet状态"><span class="nav-number">1.3.1.2.2.</span> <span class="nav-text">查看ReplicaSet状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分析ReplicaSet"><span class="nav-number">1.3.1.2.3.</span> <span class="nav-text">分析ReplicaSet</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#水平扩展-收缩"><span class="nav-number">1.3.1.2.3.1.</span> <span class="nav-text">水平扩展/收缩</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#滚动更新"><span class="nav-number">1.3.1.2.3.2.</span> <span class="nav-text">滚动更新</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#滚动更新的优势"><span class="nav-number">1.3.1.2.3.3.</span> <span class="nav-text">滚动更新的优势</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ggzr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
