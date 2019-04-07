@@ -273,6 +273,174 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/07/k8s系列-StatefulSet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/07/k8s系列-StatefulSet/" itemprop="url">k8s系列-StatefulSet</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-07T21:41:46+08:00">
+                2019-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="K8S-StatefulSet"><a href="#K8S-StatefulSet" class="headerlink" title="K8S-StatefulSet"></a>K8S-StatefulSet</h1><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。</p>
+<p>这样的话并不能满足我们的所有场景，多个实例之间可能存在依赖关系，比如主从关系、主备关系。还有一些自身实例中自己带有一些缓存数据的，实例一旦被杀掉虽然能够重建出来但是数据已经丢了。</p>
+<p>这种实例之间有不对等关系，以及实例对外部数据有依赖的，称为有状态应用，Deployment适合用来部署无状态应用，容器技术对于有状态应用来说，困难程度直线上升，一开始<strong>有状态应用</strong>几乎成了容器技术圈子的忌讳，不过Kubernetes还是成为了第一个吃螃蟹的人，这个吃螃蟹的工具就是<code>StatefulSet</code>。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>StatefulSet的设计非常容易理解，将真实世界里的应用状态分为如下两种：</p>
+<h3 id="拓扑状态"><a href="#拓扑状态" class="headerlink" title="拓扑状态"></a>拓扑状态</h3><p>拓扑状态意味着应用的多个实例之间不是完全的对等关系，这些应用的实例必须按照一定的顺序启动，比如主节点A和从节点B，主节点A必须先于从节点B启动，删除了重新创建的时候也必须满足这个顺序，并且新创建出来的Pod必须和原来的Pod标识一样，这样原先的访问者才能使用原先的方法，访问到新的Pod</p>
+<h3 id="存储状态"><a href="#存储状态" class="headerlink" title="存储状态"></a>存储状态</h3><p>队友应用的多个实例来说，应用的多个实例绑定了不同的存储数据，对于这些应用实例来说，Pod A第一次读取到的数据，和隔了十分钟读取到的数据应该是同一份，哪怕Pod A在这个期间被重新创建过，典型例子比如数据库应用的多个存储实例</p>
+<p>StatefulSet的核心功能就是通过某种方式记录Pod的这些状态，让Pod在重建时能够为新Pod恢复这些状态。</p>
+<h3 id="Service和Headless-Service介绍"><a href="#Service和Headless-Service介绍" class="headerlink" title="Service和Headless Service介绍"></a>Service和Headless Service介绍</h3><p>讲述StatefulSet工作原理之前，必须先讲解一下Headless Service，Service是Kubernetes中将Pod暴露访问的一种机制，定义好了Pod，只要能访问到这个Service就能访问到Pod，Service如何被访问的呢？</p>
+<h4 id="VIP"><a href="#VIP" class="headerlink" title="VIP"></a>VIP</h4><p>第一种方式就是Service的VIP（Virtual IP）方式，即虚拟IP的方式，比如我看到Service的IP地址是10.0.23.1，我访问这个10.0.23.1其实就是个虚拟IP，它会把请求转发到Service所代理的一个Pod上</p>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><p>Service的DNS方式，比如这时候只要我访问<code>my-svc.my-namespace.svc.cluster.local</code>这条DNS记录，就可以访问电脑名为my-svc代理的Pod。</p>
+<p>Service DNS方式下，分为两种处理方法：</p>
+<p>第一种处理方法，是Normal Service。这种情况下访问<code>my-svc.my-namespace.svc.cluster.local</code>解析到的就是my-svc的VIP，然后就是VIP的方式继续访问。</p>
+<p>第二种处理方法，就是Headless Service，这种情况下你访问<code>my-svc.my-namespace.svc.cluster.local</code>解析到的就是my-svc代理的某一个Pod的IP地址，这里的区别就在于，你不需要为这个Service分配虚拟IP，而是可以直接以DNS记录的方式解析出被代理的Pod的IP地址。</p>
+<p>这么样设计有何作用，先从Headless Service的定义方式看看再解释</p>
+<h4 id="Headless-Service定义"><a href="#Headless-Service定义" class="headerlink" title="Headless Service定义"></a>Headless Service定义</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - port:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">web</span></span><br><span class="line"><span class="attr">  clusterIP:</span> <span class="string">None</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">nginx</span></span><br></pre></td></tr></table></figure>
+<p>将上面这个yaml文件使用<code>kubectl create -f xxx.yaml</code>创建，这里的字段大多和普通的Service一样，只是clusterIP字段的值是None，也就是这个Service没有一个VIP作为头，这样这个Service被创建后就没有VIP，而是会以DNS记录的方式暴露出它所代理的Pod，他所代理的Pod就是Pod上携带了app=nginx标签的Pod。</p>
+<p>创建完这个Headless Service之后，他所代理的所有的Pod的IP地址，都被绑定一个这样的DNS记录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;pod-name&gt;.&lt;svc-name&gt;.&lt;namespace&gt;.svc.cluster.local</span><br></pre></td></tr></table></figure>
+<p>这个DNS记录，就是Kubernetes项目为Pod分配的唯一的可解析身份，有个这种访问方式，知道pod的名字和service的名字就能直接通过这条DNS记录访问到IP地址了。</p>
+<p>我们再来编写一个StatefulSet的YAML文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">web</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  serviceName:</span> <span class="string">"nginx"</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="attr">nginx:1.9.1</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">web</span></span><br></pre></td></tr></table></figure>
+<p>这个yaml文件的定义就是比Deployment一文中的nginx-deployment多了一个serviceName=nginx的属性，这个字段就是告诉StatefulSet控制器在执行控制循环的时候请使用nginx这个Headless Service来保证Pod的可解析身份。</p>
+<p>创建这个StatefulSet</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl create -f statefulSet_test1.yml </span><br><span class="line">statefulset.apps/web created</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看StatefulSet</span><br><span class="line">[root@localhost home]# kubectl get statefulset</span><br><span class="line">NAME   READY   AGE</span><br><span class="line">web    2/2     8m13s</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>查看Pod</span><br><span class="line">[root@localhost home]# kubectl get pods</span><br><span class="line">NAME    READY   STATUS    RESTARTS   AGE</span><br><span class="line">web-0   1/1     Running   0          9m</span><br><span class="line">web-1   1/1     Running   0          66s</span><br></pre></td></tr></table></figure>
+<p>从上面pod观察可以发现，StatefulSet新建的Pod后面都有个编号，从0开始，Pod的创建也是按照顺序来创建的，比如web-0进入Running状态，并且READY之前，web-1都会处于Pending状态，两个Pod都进入了Running状态之后，可以查看到它们唯一的<strong>网络身份</strong>了。</p>
+<p>现在来试试用之前说到的dns记录能不能访问到这些pod，使用如下命令创建一个一次性Pod，在里面使用<code>nslookup</code>解析Pod对应的Headless Service</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>创建一个一次性的Pod，-rm命令意味着Pod退出后就会被删除掉</span><br><span class="line">[root@localhost home]# kubectl run -i --tty --image busybox dns-test --restart=Never --rm /bin/sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>上面的命令执行成功之后会自动进入pod中</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/05/k8s系列-Deployment/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1524,7 +1692,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
