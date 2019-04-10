@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-07T16:34:17.587Z">
+<meta property="og:updated_time" content="2019-04-10T15:25:17.005Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-StatefulSet">
 <meta name="twitter:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
@@ -365,6 +365,7 @@
         <h1 id="K8S-StatefulSet"><a href="#K8S-StatefulSet" class="headerlink" title="K8S-StatefulSet"></a>K8S-StatefulSet</h1><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。</p>
 <p>这样的话并不能满足我们的所有场景，多个实例之间可能存在依赖关系，比如主从关系、主备关系。还有一些自身实例中自己带有一些缓存数据的，实例一旦被杀掉虽然能够重建出来但是数据已经丢了。</p>
 <p>这种实例之间有不对等关系，以及实例对外部数据有依赖的，称为有状态应用，Deployment适合用来部署无状态应用，容器技术对于有状态应用来说，困难程度直线上升，一开始<strong>有状态应用</strong>几乎成了容器技术圈子的忌讳，不过Kubernetes还是成为了第一个吃螃蟹的人，这个吃螃蟹的工具就是<code>StatefulSet</code>。</p>
+<a id="more"></a>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>StatefulSet的设计非常容易理解，将真实世界里的应用状态分为如下两种：</p>
 <h3 id="拓扑状态"><a href="#拓扑状态" class="headerlink" title="拓扑状态"></a>拓扑状态</h3><p>拓扑状态意味着应用的多个实例之间不是完全的对等关系，这些应用的实例必须按照一定的顺序启动，比如主节点A和从节点B，主节点A必须先于从节点B启动，删除了重新创建的时候也必须满足这个顺序，并且新创建出来的Pod必须和原来的Pod标识一样，这样原先的访问者才能使用原先的方法，访问到新的Pod</p>
 <h3 id="存储状态"><a href="#存储状态" class="headerlink" title="存储状态"></a>存储状态</h3><p>队友应用的多个实例来说，应用的多个实例绑定了不同的存储数据，对于这些应用实例来说，Pod A第一次读取到的数据，和隔了十分钟读取到的数据应该是同一份，哪怕Pod A在这个期间被重新创建过，典型例子比如数据库应用的多个存储实例</p>
