@@ -88,7 +88,7 @@
 <meta property="og:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55898271-d1b5a100-5bf4-11e9-9423-2d0c3bdd4d77.png">
-<meta property="og:updated_time" content="2019-04-10T16:58:23.052Z">
+<meta property="og:updated_time" content="2019-04-13T13:54:13.363Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s系列-StatefulSet">
 <meta name="twitter:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
@@ -390,7 +390,7 @@
 <p>创建这个StatefulSet</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl create -f statefulSet_test1.yml </span><br><span class="line">statefulset.apps/web created</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看StatefulSet</span><br><span class="line">[root@localhost home]# kubectl get statefulset</span><br><span class="line">NAME   READY   AGE</span><br><span class="line">web    2/2     8m13s</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>查看Pod</span><br><span class="line">[root@localhost home]# kubectl get pods</span><br><span class="line">NAME    READY   STATUS    RESTARTS   AGE</span><br><span class="line">web-0   1/1     Running   0          9m</span><br><span class="line">web-1   1/1     Running   0          66s</span><br></pre></td></tr></table></figure>
 <p>从上面pod观察可以发现，StatefulSet新建的Pod后面都有个编号，从0开始，Pod的创建也是按照顺序来创建的，比如web-0进入Running状态，并且READY之前，web-1都会处于Pending状态，两个Pod都进入了Running状态之后，可以查看到它们唯一的<strong>网络身份</strong>了。</p>
-<p>现在来试试用之前说到的dns记录能不能访问到这些pod，使用如下命令创建一个一次性Pod，在里面使用<code>nslookup</code>解析Pod对应的Headless Service</p>
+<p>现在来试试用之前说到的dns记录能不能访问到这些pod，使用如下命令创建一个一次性Pod，在里面使用<code>nslookup</code>解析Pod对应的<code>Headless Service</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>创建一个一次性的Pod，-rm命令意味着Pod退出后就会被删除掉(busybox的latest镜像一直解析dns失败，用老版本就可以)</span><br><span class="line">[root@localhost home]# kubectl run -i --tty --image busybox:1.28.3 dns-test --restart=Never --rm /bin/sh</span><br></pre></td></tr></table></figure>
 <p>上面的命令执行成功之后会自动进入pod中<br><img src="https://user-images.githubusercontent.com/20592210/55898271-d1b5a100-5bf4-11e9-9423-2d0c3bdd4d77.png" alt="image"></p>
 
