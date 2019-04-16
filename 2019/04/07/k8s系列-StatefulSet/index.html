@@ -82,16 +82,16 @@
 <meta name="description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
 <meta name="keywords" content="DevOps,k8s">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s系列-StatefulSet简介">
+<meta property="og:title" content="k8s系列-StatefulSet-拓扑状态">
 <meta property="og:url" content="http://losergzr.cn/2019/04/07/k8s系列-StatefulSet/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/55898271-d1b5a100-5bf4-11e9-9423-2d0c3bdd4d77.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/56222840-49754700-609f-11e9-992e-6746e77ad4a7.png">
-<meta property="og:updated_time" content="2019-04-16T15:47:51.458Z">
+<meta property="og:updated_time" content="2019-04-16T15:49:40.046Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s系列-StatefulSet简介">
+<meta name="twitter:title" content="k8s系列-StatefulSet-拓扑状态">
 <meta name="twitter:description" content="K8S-StatefulSet引入Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。 这样的话并不能满足我们的所有场景">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/55898271-d1b5a100-5bf4-11e9-9423-2d0c3bdd4d77.png">
 
@@ -129,7 +129,7 @@
 
 
 
-  <title>k8s系列-StatefulSet简介 | losergzr's blog</title>
+  <title>k8s系列-StatefulSet-拓扑状态 | losergzr's blog</title>
   
 
 
@@ -293,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">k8s系列-StatefulSet简介</h1>
+          <h1 class="post-title" itemprop="name headline">k8s系列-StatefulSet-拓扑状态</h1>
         
 
         <div class="post-meta">
