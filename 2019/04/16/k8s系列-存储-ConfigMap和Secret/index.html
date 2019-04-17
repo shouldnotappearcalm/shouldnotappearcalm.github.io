@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DevOps,k8s," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="K8S-ConfigMap和SecretConfigMap和Secret性质上比较类似，K8S中都通常用来存储一些配置信息，Secret一般用来保存密码、token、密钥等敏感数据的配置问题，定义声明式文件的时候可以用volume或者环境变量方式引用，ConfigMap通常用来存一些没那么敏感的数据。">
+<meta name="keywords" content="DevOps,k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s系列-存储-ConfigMap和Secret">
+<meta property="og:url" content="http://losergzr.cn/2019/04/16/k8s系列-存储-ConfigMap和Secret/index.html">
+<meta property="og:site_name" content="losergzr&#39;s blog">
+<meta property="og:description" content="K8S-ConfigMap和SecretConfigMap和Secret性质上比较类似，K8S中都通常用来存储一些配置信息，Secret一般用来保存密码、token、密钥等敏感数据的配置问题，定义声明式文件的时候可以用volume或者环境变量方式引用，ConfigMap通常用来存一些没那么敏感的数据。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-17T16:42:49.135Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s系列-存储-ConfigMap和Secret">
+<meta name="twitter:description" content="K8S-ConfigMap和SecretConfigMap和Secret性质上比较类似，K8S中都通常用来存储一些配置信息，Secret一般用来保存密码、token、密钥等敏感数据的配置问题，定义声明式文件的时候可以用volume或者环境变量方式引用，ConfigMap通常用来存一些没那么敏感的数据。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://losergzr.cn/2019/04/16/k8s系列-存储-ConfigMap和Secret/"/>
+
+
+
+
+
+  <title>k8s系列-存储-ConfigMap和Secret | losergzr's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">losergzr's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/16/k8s系列-存储-ConfigMap和Secret/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">k8s系列-存储-ConfigMap和Secret</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-16T23:54:52+08:00">
+                2019-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="K8S-ConfigMap和Secret"><a href="#K8S-ConfigMap和Secret" class="headerlink" title="K8S-ConfigMap和Secret"></a>K8S-ConfigMap和Secret</h1><p>ConfigMap和Secret性质上比较类似，K8S中都通常用来存储一些配置信息，Secret一般用来保存密码、token、密钥等敏感数据的配置问题，定义声明式文件的时候可以用volume或者环境变量方式引用，ConfigMap通常用来存一些没那么敏感的数据。</p>
+<a id="more"></a>
+<h2 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>ConfigMap API资源用来保存key-value pair配置数据，这个数据可以在pods里使用，或者被用来为像controller一样的系统组件存储配置数据。ConfigMap不是属性配置文件的替代品，ConfigMaps只是作为多个properties文件的引用,比如下面这个例子中</p>
+<p>data一栏包括很多配置数据，可以用来保存单个属性，也可以用来保存一个配置文件，配置的数据可以在pod中来使用，ConfigMaps可以被用来：</p>
+<ul>
+<li>设置环境变量的值</li>
+<li>在容器里设置命令行参数</li>
+<li>在数据卷里创建config文件</li>
+</ul>
+<h3 id="一个简单的ConfigMap"><a href="#一个简单的ConfigMap" class="headerlink" title="一个简单的ConfigMap"></a>一个简单的ConfigMap</h3><p>config-example.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">example-config</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">example.property.1:</span> <span class="string">hello</span></span><br><span class="line">  <span class="string">example.property.2:</span> <span class="string">world</span></span><br><span class="line">  <span class="string">example.property.file:</span> <span class="string">|-</span></span><br><span class="line">    <span class="string">property.1=value-1</span></span><br><span class="line">    <span class="string">property.2=value-2</span></span><br><span class="line">    <span class="string">property.3=value-3</span></span><br></pre></td></tr></table></figure>
+<p>我们使用如下命令就可以创建这个ConfigMap了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f config-example.yml</span><br></pre></td></tr></table></figure>
+<h3 id="创建ConfigMap的几种方式"><a href="#创建ConfigMap的几种方式" class="headerlink" title="创建ConfigMap的几种方式"></a>创建ConfigMap的几种方式</h3><p>同时我们可以使用如下命令查看如何创建ConfigMap</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost home]# kubectl create configmap -h</span><br><span class="line"></span><br><span class="line">Examples:</span><br><span class="line"><span class="meta">  #</span> Create a new configmap named my-config based on folder bar</span><br><span class="line">  kubectl create configmap my-config --from-file=path/to/bar</span><br><span class="line">  </span><br><span class="line"><span class="meta">  #</span> Create a new configmap named my-config with specified keys instead of file basenames on disk</span><br><span class="line">  kubectl create configmap my-config --from-file=key1=/path/to/bar/file1.txt --from-file=key2=/path/to/bar/file2.txt</span><br><span class="line">  </span><br><span class="line"><span class="meta">  #</span> Create a new configmap named my-config with key1=config1 and key2=config2</span><br><span class="line">  kubectl create configmap my-config --from-literal=key1=config1 --from-literal=key2=config2</span><br><span class="line">  </span><br><span class="line"><span class="meta">  #</span> Create a new configmap named my-config from the key=value pairs in the file</span><br><span class="line">  kubectl create configmap my-config --from-file=path/to/bar</span><br><span class="line">  </span><br><span class="line"><span class="meta">  #</span> Create a new configmap named my-config from an env file</span><br><span class="line">  kubectl create configmap my-config --from-env-file=path/to/bar.env</span><br></pre></td></tr></table></figure>
+<h3 id="使用文件夹创建ConfigMap"><a href="#使用文件夹创建ConfigMap" class="headerlink" title="使用文件夹创建ConfigMap"></a>使用文件夹创建ConfigMap</h3><p>比如我们现在有如下两个properties文件：</p>
+<p>game.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">enemies=aliens</span><br><span class="line">lives=3</span><br><span class="line">enemies.cheat=true</span><br><span class="line">enemies.cheat.level=noGoodRotten</span><br><span class="line">secret.code.passphrase=UUDDLRLRBABAS</span><br><span class="line">secret.code.allowed=true</span><br><span class="line">secret.code.lives=30</span><br></pre></td></tr></table></figure>
+<p>ui.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color.good=purple</span><br><span class="line">color.bad=yellow</span><br><span class="line">allow.textmode=true</span><br><span class="line">how.nice.to.look=fairlyNice</span><br></pre></td></tr></table></figure>
+<p>现在我们把这两个文件都放在<code>/home/properties</code>目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# cat /home/properties/game.properties</span><br><span class="line">enemies=aliens</span><br><span class="line">lives=3</span><br><span class="line">enemies.cheat=true</span><br><span class="line">enemies.cheat.level=noGoodRotten</span><br><span class="line">secret.code.passphrase=UUDDLRLRBABAS</span><br><span class="line">secret.code.allowed=true</span><br><span class="line">secret.code.lives=30</span><br><span class="line"></span><br><span class="line">[root@localhost properties]# cat /home/properties/ui.properties</span><br><span class="line">color.good=purple</span><br><span class="line">color.bad=yellow</span><br><span class="line">allow.textmode=true</span><br><span class="line">how.nice.to.look=fairlyNice</span><br></pre></td></tr></table></figure>
+<p>我们使用如下命令创建出这个ConfigMap</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# kubectl create configmap game-config --from-file=/home/properties/</span><br></pre></td></tr></table></figure>
+<p><code>--from-file</code>指定的是只要在目录下面的所有文件都会被用在ConfigMap里面创建一个键值对，键的名字就是文件名字，值就是文件内容</p>
+<p>可以使用如下命令查看这个刚创建的ConfigMap，并且使用<code>-o yaml</code>指定以yaml的格式输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# kubectl get configmap game-config -o yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">data:</span><br><span class="line">  game.properties: |</span><br><span class="line">    enemies=aliens</span><br><span class="line">    lives=3</span><br><span class="line">    enemies.cheat=true</span><br><span class="line">    enemies.cheat.level=noGoodRotten</span><br><span class="line">    secret.code.passphrase=UUDDLRLRBABAS</span><br><span class="line">    secret.code.allowed=true</span><br><span class="line">    secret.code.lives=30</span><br><span class="line">  ui.properties: |</span><br><span class="line">    color.good=purple</span><br><span class="line">    color.bad=yellow</span><br><span class="line">    allow.textmode=true</span><br><span class="line">    how.nice.to.look=fairlyNice</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: "2019-04-17T15:57:21Z"</span><br><span class="line">  name: game-config</span><br><span class="line">  namespace: default</span><br><span class="line">  resourceVersion: "381696"</span><br><span class="line">  selfLink: /api/v1/namespaces/default/configmaps/game-config</span><br><span class="line">  uid: 7c106bf9-6129-11e9-b679-080027eea012</span><br></pre></td></tr></table></figure>
+<h3 id="使用单个文件创建ConfigMap"><a href="#使用单个文件创建ConfigMap" class="headerlink" title="使用单个文件创建ConfigMap"></a>使用单个文件创建ConfigMap</h3><p>也可以使用之前的单个properties文件进行创建ConfigMap，比如使用如下命令创建<code>game.properties</code>的ConfigMap，并且使用yaml格式进行查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# kubectl create configmap game-config-222 --from-file=/home/properties/game.properties</span><br><span class="line">configmap/game-config-222 created</span><br><span class="line"></span><br><span class="line">[root@localhost properties]# kubectl get configmap game-config-222 -o yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">data:</span><br><span class="line">  game.properties: |</span><br><span class="line">    enemies=aliens</span><br><span class="line">    lives=3</span><br><span class="line">    enemies.cheat=true</span><br><span class="line">    enemies.cheat.level=noGoodRotten</span><br><span class="line">    secret.code.passphrase=UUDDLRLRBABAS</span><br><span class="line">    secret.code.allowed=true</span><br><span class="line">    secret.code.lives=30</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: "2019-04-17T16:07:27Z"</span><br><span class="line">  name: game-config-222</span><br><span class="line">  namespace: default</span><br><span class="line">  resourceVersion: "382481"</span><br><span class="line">  selfLink: /api/v1/namespaces/default/configmaps/game-config-222</span><br><span class="line">  uid: e516cec2-612a-11e9-b679-080027eea012</span><br></pre></td></tr></table></figure>
+<h3 id="命令行指定key-value创建ConfigMap"><a href="#命令行指定key-value创建ConfigMap" class="headerlink" title="命令行指定key-value创建ConfigMap"></a>命令行指定key-value创建ConfigMap</h3><p>我们可以直接在create的时候指定创建的ConfigMap的key-value，比如下面的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# kubectl create configmap special-config2 --from-literal=test=good --from-literal=test2=good2</span><br><span class="line">configmap/special-config2 created</span><br><span class="line"></span><br><span class="line">[root@localhost properties]# kubectl get configmap special-config2 -o yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">data:</span><br><span class="line">  test: good</span><br><span class="line">  test2: good2</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: "2019-04-17T16:10:12Z"</span><br><span class="line">  name: special-config2</span><br><span class="line">  namespace: default</span><br><span class="line">  resourceVersion: "382697"</span><br><span class="line">  selfLink: /api/v1/namespaces/default/configmaps/special-config2</span><br><span class="line">  uid: 47ddf47d-612b-11e9-b679-080027eea012</span><br></pre></td></tr></table></figure>
+<h2 id="Pod中使用ConfigMap"><a href="#Pod中使用ConfigMap" class="headerlink" title="Pod中使用ConfigMap"></a>Pod中使用ConfigMap</h2><h3 id="使用ConfigMap来替代环境变量"><a href="#使用ConfigMap来替代环境变量" class="headerlink" title="使用ConfigMap来替代环境变量"></a>使用ConfigMap来替代环境变量</h3><p>定义如下文件<code>pod-config-env.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">special-config</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">special.how:</span> <span class="string">very</span></span><br><span class="line">  <span class="string">special.type:</span> <span class="string">charm</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">env-config</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  log_level:</span> <span class="string">INFO</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">pod-config-env</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">test-container</span></span><br><span class="line"><span class="attr">      image:</span> <span class="attr">busybox:1.28.3</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">["/bin/sh",</span> <span class="string">"-c"</span><span class="string">,</span> <span class="string">"env"</span><span class="string">]</span></span><br><span class="line"><span class="attr">      env:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">SPECIAL_LEVEL_KEY</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            configMapKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">special-config</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">special.how</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">SPECIAL_TYPE_KEY</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            configMapKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">special-config</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">special.type</span></span><br><span class="line"><span class="attr">      envFrom:</span></span><br><span class="line"><span class="attr">        - configMapRef:</span></span><br><span class="line"><span class="attr">            name:</span> <span class="string">env-config</span></span><br><span class="line"><span class="attr">  restartPolicy:</span> <span class="string">Never</span></span><br></pre></td></tr></table></figure>
+<p>上文中我们定义了两个ConfigMap，一个是<code>special-config</code>,一个是<code>env-config</code>,分别以不同的方式引入，一种是直接envFrom将<code>env-config</code>整体引入pod作为环境变量，一种是通过<code>env</code>的定义按需引入，指定name为<code>ConfigMap</code>的名字，key为<code>ConfigMap</code>中的key。</p>
+<p>使用如下命令进行创建</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost properties]# kubectl apply -f /home/pod-config-env.yml</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>再使用如下命令查看这个pod的日志输出，因为这个container在运行的时候会打印出所有的环境变量，可以看到包含 SPECIAL_TYPE_KEY=charm SPECIAL_LEVEL_KEY=very log_level=INFO,证明环境变量引入成功</span><br><span class="line">[root@localhost properties]# kubectl logs pod-config-env</span><br><span class="line">KUBERNETES_SERVICE_PORT=443</span><br><span class="line">KUBERNETES_PORT=tcp://10.96.0.1:443</span><br><span class="line">HOSTNAME=pod-config-env</span><br><span class="line">SHLVL=1</span><br><span class="line">HOME=/root</span><br><span class="line">SPECIAL_TYPE_KEY=charm</span><br><span class="line">KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1</span><br><span class="line">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line">KUBERNETES_PORT_443_TCP_PORT=443</span><br><span class="line">KUBERNETES_PORT_443_TCP_PROTO=tcp</span><br><span class="line">SPECIAL_LEVEL_KEY=very</span><br><span class="line">log_level=INFO</span><br><span class="line">KUBERNETES_SERVICE_PORT_HTTPS=443</span><br><span class="line">KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443</span><br><span class="line">KUBERNETES_SERVICE_HOST=10.96.0.1</span><br><span class="line">PWD=/</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DevOps/" rel="tag"># DevOps</a>
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/16/k8s系列-StatefulSet-存储状态/" rel="next" title="k8s系列-StatefulSet-存储状态">
+                <i class="fa fa-chevron-left"></i> k8s系列-StatefulSet-存储状态
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png"
+                alt="ggzr" />
+            
+              <p class="site-author-name" itemprop="name">ggzr</p>
+              <p class="site-description motion-element" itemprop="description">一只咸鱼的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S-ConfigMap和Secret"><span class="nav-number">1.</span> <span class="nav-text">K8S-ConfigMap和Secret</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ConfigMap"><span class="nav-number">1.1.</span> <span class="nav-text">ConfigMap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个简单的ConfigMap"><span class="nav-number">1.1.2.</span> <span class="nav-text">一个简单的ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ConfigMap的几种方式"><span class="nav-number">1.1.3.</span> <span class="nav-text">创建ConfigMap的几种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用文件夹创建ConfigMap"><span class="nav-number">1.1.4.</span> <span class="nav-text">使用文件夹创建ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用单个文件创建ConfigMap"><span class="nav-number">1.1.5.</span> <span class="nav-text">使用单个文件创建ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行指定key-value创建ConfigMap"><span class="nav-number">1.1.6.</span> <span class="nav-text">命令行指定key-value创建ConfigMap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod中使用ConfigMap"><span class="nav-number">1.2.</span> <span class="nav-text">Pod中使用ConfigMap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用ConfigMap来替代环境变量"><span class="nav-number">1.2.1.</span> <span class="nav-text">使用ConfigMap来替代环境变量</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ggzr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
