@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。 加载器和双亲委派模型所有的类都有个顶级类加载器BootstrapClassLoader，启动类加载器由 C++ 实现，没">
+<meta name="description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。">
 <meta name="keywords" content="Java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM系列-类的加载">
 <meta property="og:url" content="http://losergzr.cn/2019/04/26/JVM系列-类的加载/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。 加载器和双亲委派模型所有的类都有个顶级类加载器BootstrapClassLoader，启动类加载器由 C++ 实现，没">
+<meta property="og:description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57201444-8318de00-6fcb-11e9-8648-8402b26db180.png">
-<meta property="og:updated_time" content="2019-05-05T23:50:51.016Z">
+<meta property="og:updated_time" content="2019-05-05T23:53:07.060Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM系列-类的加载">
-<meta name="twitter:description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。 加载器和双亲委派模型所有的类都有个顶级类加载器BootstrapClassLoader，启动类加载器由 C++ 实现，没">
+<meta name="twitter:description" content="类加载从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。 加载过程加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。">
 <meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/57201444-8318de00-6fcb-11e9-8648-8402b26db180.png">
 
 
@@ -365,7 +365,7 @@
 
       
         <h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><p>从class文件到内存中的类，按先后顺序需要经过加载、链接、初始化三个步骤，内存中的类没有经过初始化是不能使用的。</p>
-<h3 id="加载过程"><a href="#加载过程" class="headerlink" title="加载过程"></a>加载过程</h3><p>加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。</p>
+<h3 id="加载过程"><a href="#加载过程" class="headerlink" title="加载过程"></a>加载过程</h3><p>加载的过程就是查找字节流的过程，对于数组类来说没有对应的字节流，是由Java虚拟机直接生成的，对于其他类来说则需要借助类加载器完成查找字节流的过程。<br><a id="more"></a></p>
 <h4 id="加载器和双亲委派模型"><a href="#加载器和双亲委派模型" class="headerlink" title="加载器和双亲委派模型"></a>加载器和双亲委派模型</h4><p>所有的类都有个顶级类加载器BootstrapClassLoader，启动类加载器由 C++ 实现，没有对应的 Java 对象所以在 Java中只能用null来指代。</p>
 <p>除了启动类加载器，其他类加载器都是 <code>java.lang.ClassLoader</code>的子类，因此有对应的 Java 对象，这些类加载器需要由另一个加载器比如启动类加载器加载到 Java 虚拟机中，才能执行类加载</p>
 <p>类加载的过程中，先检查是否已经加载过，若没有加载则调用父类加载器的<code>loadClass()</code>方法，每一层的类加载器都是如此，所有的请求都会传送到顶层的类加载器中，父加载器反馈自己无法完成这个加载请求后，子加载器才会尝试自己去加载。若父类加载器为空则默认使用启动类加载器作为父加载器。若父加载失败，抛出<code>ClassNotFoundException</code>异常后，调用自己的<code>findClass()</code>方法进行加载。</p>
