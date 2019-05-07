@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="并发和并行并发指的是某个时间段内，多任务交替处理的能力，每个CPU不可能把一个任务执行完再执行下个任务，这样很多任务就会一直处于等待状态，所以CPU有个时间片的说法，每个任务执行完时间片的时间之后就会释放CPU的资源，其他任务就会来抢占CPU的资源。 并行指的是多核CPU可以同时进行多个任务的处理，它们是在同时执行的，而不是像并发那样，并发在某一个特定的时间点其实只有一个在运行。 并发和并行都是为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57260637-179c4280-7097-11e9-9073-7bb70a54b421.png">
-<meta property="og:updated_time" content="2019-05-07T00:14:30.724Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57262845-71553a80-70a0-11e9-8b55-96b8f6f86351.png">
+<meta property="og:updated_time" content="2019-05-07T00:16:59.857Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java线程安全">
 <meta name="twitter:description" content="并发和并行并发指的是某个时间段内，多任务交替处理的能力，每个CPU不可能把一个任务执行完再执行下个任务，这样很多任务就会一直处于等待状态，所以CPU有个时间片的说法，每个任务执行完时间片的时间之后就会释放CPU的资源，其他任务就会来抢占CPU的资源。 并行指的是多核CPU可以同时进行多个任务的处理，它们是在同时执行的，而不是像并发那样，并发在某一个特定的时间点其实只有一个在运行。 并发和并行都是为">
-<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/57260637-179c4280-7097-11e9-9073-7bb70a54b421.png">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/57262845-71553a80-70a0-11e9-8b55-96b8f6f86351.png">
 
 
 
@@ -375,7 +375,7 @@
 </ul>
 <a id="more"></a>
 <h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><h3 id="合理设置线程数"><a href="#合理设置线程数" class="headerlink" title="合理设置线程数"></a>合理设置线程数</h3><p>线程是 CPU 分发和调度的基本单位，一般为了合理利用 CPU 资源都会使用多线程处理，多线程主要是为了提高任务的平均执行速度，但是会导致程序让别人理解起来更麻烦一点。比如楼下一车砖需要搬到 17 楼上去，十个人一起搬肯定比 1 个人搬得快，完成这个任务的总时间也会大大减少，但是如果考虑上下楼梯是两个人遇到可能会让路耽搁时间，所以一个人搬一次上去的时间可能比之前慢，所以如果很多人一起搬的话可能并不比10个人效率高，所以需要合理地设置人数，对比到程序中来说也是，合理设置线程数才能 CPU 资源充分被利用。</p>
-<h3 id="线程的五种基本状态"><a href="#线程的五种基本状态" class="headerlink" title="线程的五种基本状态"></a>线程的五种基本状态</h3><p><img src="https://user-images.githubusercontent.com/20592210/57260637-179c4280-7097-11e9-9073-7bb70a54b421.png" alt="线程生命周期"></p>
+<h3 id="线程的五种基本状态"><a href="#线程的五种基本状态" class="headerlink" title="线程的五种基本状态"></a>线程的五种基本状态</h3><p><img src="https://user-images.githubusercontent.com/20592210/57262845-71553a80-70a0-11e9-8b55-96b8f6f86351.png" alt="线程生命周期"></p>
 <h4 id="NEW-—-新建状态"><a href="#NEW-—-新建状态" class="headerlink" title="NEW — 新建状态"></a>NEW — 新建状态</h4><p>新建状态是线程已经创建，但是还没有启动的状态，创建线程的方式有如下三种：</p>
 <ul>
 <li>继承 Thread 类</li>
