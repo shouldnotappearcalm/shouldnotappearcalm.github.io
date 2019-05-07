@@ -273,6 +273,160 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/05/06/Java线程安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/06/Java线程安全/" itemprop="url">Java线程安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-06T07:56:16+08:00">
+                2019-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><p>并发指的是某个时间段内，多任务交替处理的能力，每个CPU不可能把一个任务执行完再执行下个任务，这样很多任务就会一直处于等待状态，所以CPU有个时间片的说法，每个任务执行完时间片的时间之后就会释放CPU的资源，其他任务就会来抢占CPU的资源。</p>
+<p>并行指的是多核CPU可以同时进行多个任务的处理，它们是在同时执行的，而不是像并发那样，并发在某一个特定的时间点其实只有一个在运行。</p>
+<p>并发和并行都是为了尽可能块地执行完所有的任务，比如两个医生都在坐诊给病人看病这就是并行，其中一个医生，一会回答病人问题，一会给病人开药，然后又继续回答病人问题，就是并发（虽然这个时间片可能有点长）。</p>
+<p>并发的环境下程序的封闭性被打破，出现了以下特点：</p>
+<ul>
+<li>并发程序之间的制约关系。直接制约为一个程序需要另一个程序的处理结果，简介制约为多个程序共享资源，比如处理器、缓冲区等。</li>
+<li>并发程序是断断续续的，程序需要记忆现场指令和执行点。</li>
+<li>并发数合理并且CPU处理能力足够的时候，并发会提高程序运行的效率。</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/06/Java线程安全/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/05/04/JVM内存布局和参数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1579,131 +1733,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2018/10/29/ElasticSearch入门/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ggzr">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="losergzr's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/29/ElasticSearch入门/" itemprop="url">ElasticSearch学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-29T09:39:11+08:00">
-                2018-10-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="一-ElasticSearch简介"><a href="#一-ElasticSearch简介" class="headerlink" title="一.ElasticSearch简介"></a>一.ElasticSearch简介</h3><p>ES是目前全文搜索引擎首选，可以快速存储、搜索和分析海量数据，维基百科、Stack Overflow、Github都采用它。ES底层是开源库Lucene，ES是Lucene的封装，提供REST API的操作接口，开箱即用。</p>
-<h3 id="二-ES安装"><a href="#二-ES安装" class="headerlink" title="二.ES安装"></a>二.ES安装</h3><p>安装较为简单，需要先安装JAVA8，通过官网下载，<a href="https://www.elastic.co/cn/downloads/elasticsearch" target="_blank" rel="noopener">下载地址</a>。解压到目录下，输入下面命令启动ES<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/29/ElasticSearch入门/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1758,7 +1787,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1780,7 +1809,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
