@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="线程池,Java,多线程," />
+  <meta name="keywords" content="Java,多线程,线程池," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="Fork/Join 简介Fork/Join 框架在 JDK1.7 引入，给我的感觉主要解决类似递归类任务，分而治之，最适合的是计算密集型任务。将一个大的任务拆分成多个小的任务，多个任务之间又有一些的关联和依赖关系，并行执行提高 CPU 的使用率。 ForkJoinPool采用分治+work-stealing的思想。可以让我们很方便地将一个大任务拆散成小任务，并行地执行，提高CPU的使用率。 我们通">
-<meta name="keywords" content="线程池,Java,多线程">
+<meta name="keywords" content="Java,多线程,线程池">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java多线程编程-Fork&#x2F;Join">
 <meta property="og:url" content="http://losergzr.cn/2019/05/12/Java多线程编程-ForkJoinPool/index.html">
@@ -89,7 +89,8 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57578729-81b44d80-74c4-11e9-8d07-b675b8838444.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57578762-f091a680-74c4-11e9-9a3e-049ff227370f.png">
-<meta property="og:updated_time" content="2019-05-12T09:09:30.194Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/57579936-2d19ce00-74d6-11e9-9f92-f407d61a5b1e.png">
+<meta property="og:updated_time" content="2019-05-12T09:57:34.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java多线程编程-Fork&#x2F;Join">
 <meta name="twitter:description" content="Fork/Join 简介Fork/Join 框架在 JDK1.7 引入，给我的感觉主要解决类似递归类任务，分而治之，最适合的是计算密集型任务。将一个大的任务拆分成多个小的任务，多个任务之间又有一些的关联和依赖关系，并行执行提高 CPU 的使用率。 ForkJoinPool采用分治+work-stealing的思想。可以让我们很方便地将一个大任务拆散成小任务，并行地执行，提高CPU的使用率。 我们通">
@@ -418,10 +419,22 @@
 <p>让我们再来分析下 doJoin() 方法的实现代码</p>
 <p>在 doJoin() 方法里，首先通过查看任务的状态，看任务是否已经执行完了，如果执行完了，则直接返回任务状态，如果没有执行完，则从任务数组里取出任务并执行。如果任务顺利执行完成了，则设置任务状态为 NORMAL，如果出现异常，则纪录异常，并将任务状态设置为 EXCEPTIONAL</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">doJoin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> s; Thread t; ForkJoinWorkerThread wt; ForkJoinPool.WorkQueue w;</span><br><span class="line">    <span class="keyword">return</span> (s = status) &lt; <span class="number">0</span> ? s :</span><br><span class="line">        ((t = Thread.currentThread()) <span class="keyword">instanceof</span> ForkJoinWorkerThread) ?</span><br><span class="line">        (w = (wt = (ForkJoinWorkerThread)t).workQueue).</span><br><span class="line">        tryUnpush(<span class="keyword">this</span>) &amp;&amp; (s = doExec()) &lt; <span class="number">0</span> ? s :</span><br><span class="line">        wt.pool.awaitJoin(w, <span class="keyword">this</span>, <span class="number">0L</span>) :</span><br><span class="line">        externalAwaitDone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整体流程图如下：</p>
+<ol>
+<li>检查调用 join() 的线程是否是 ForkJoinThread 线程。如果不是（例如 main 线程），则阻塞当前线程，等待任务完成。如果是，则不阻塞。</li>
+<li>查看任务的完成状态，如果已经完成，直接返回结果。</li>
+<li>如果任务尚未完成，但处于自己的工作队列内，则完成它。</li>
+<li>如果任务已经被其他的工作线程偷走，则窃取这个小偷的工作队列内的任务（以 FIFO 方式），执行，以期帮助它早日完成欲 join 的任务。</li>
+<li>如果偷走任务的小偷也已经把自己的任务全部做完，正在等待需要 join 的任务时，则找到小偷的小偷，帮助它完成它的任务。</li>
+<li>递归地执行第5步。</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/20592210/57579936-2d19ce00-74d6-11e9-9f92-f407d61a5b1e.png" alt="image"></p>
 <p>上面的大概就是 <code>fork()</code>, <code>join()</code> 大概的执行逻辑，但是最开始的任务会被 push 到哪个线程的工作队列里面去的？</p>
 <p>这个就需要去看看 <code>submit()</code> 方法是怎么实现的了。</p>
 <h3 id="submit"><a href="#submit" class="headerlink" title="submit"></a>submit</h3><p>其实除了前面介绍过的每个工作线程自己拥有的工作队列以外，ForkJoinPool 自身也拥有工作队列，这些工作队列的作用是用来接收由外部线程（非 ForkJoinThread 线程）提交过来的任务，而这些工作队列被称为 submitting queue 。</p>
 <p>submit() 和 fork() 其实没有本质区别，只是提交对象变成了 submitting queue 而已（还有一些同步，初始化的操作）。submitting queue 和其他 work queue 一样，是工作线程”窃取“的对象，因此当其中的任务被一个工作线程成功窃取时，就意味着提交的任务真正开始进入执行阶段。</p>
+<h2 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h2><p>在 JDK8 中 <code>lamdba</code> 有个 stream 操作 <code>parallelStream</code>,底层也是使用ForkJoinPool实现的;</p>
+<p>我们可以通过 <code>Executors.newWorkStealingPool(int parallelism)</code> 快速创建 <code>ForkJoinPool</code> 线程池,无参默认使用CPU数量的线程数执行任务;</p>
 
       
     </div>
@@ -439,11 +452,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/线程池/" rel="tag"># 线程池</a>
-          
             <a href="/tags/Java/" rel="tag"># Java</a>
           
             <a href="/tags/多线程/" rel="tag"># 多线程</a>
+          
+            <a href="/tags/线程池/" rel="tag"># 线程池</a>
           
         </div>
       
@@ -465,6 +478,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/12/Java多线程编程-ThreadLocal/" rel="prev" title="Java多线程编程-ThreadLocal">
+                Java多线程编程-ThreadLocal <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -545,7 +562,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -600,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-简介"><span class="nav-number">1.</span> <span class="nav-text">Fork/Join 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作窃取算法"><span class="nav-number">1.1.</span> <span class="nav-text">工作窃取算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架的使用"><span class="nav-number">2.</span> <span class="nav-text">Fork/Join 框架的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架的异常处理"><span class="nav-number">3.</span> <span class="nav-text">Fork/Join 框架的异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架实现的原理"><span class="nav-number">4.</span> <span class="nav-text">Fork/Join 框架实现的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fork"><span class="nav-number">4.1.</span> <span class="nav-text">fork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#join"><span class="nav-number">4.2.</span> <span class="nav-text">join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#submit"><span class="nav-number">4.3.</span> <span class="nav-text">submit</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-简介"><span class="nav-number">1.</span> <span class="nav-text">Fork/Join 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作窃取算法"><span class="nav-number">1.1.</span> <span class="nav-text">工作窃取算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架的使用"><span class="nav-number">2.</span> <span class="nav-text">Fork/Join 框架的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架的异常处理"><span class="nav-number">3.</span> <span class="nav-text">Fork/Join 框架的异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join-框架实现的原理"><span class="nav-number">4.</span> <span class="nav-text">Fork/Join 框架实现的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fork"><span class="nav-number">4.1.</span> <span class="nav-text">fork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#join"><span class="nav-number">4.2.</span> <span class="nav-text">join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#submit"><span class="nav-number">4.3.</span> <span class="nav-text">submit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多"><span class="nav-number">5.</span> <span class="nav-text">更多</span></a></li></ol></div>
             
 
           </div>
