@@ -273,6 +273,154 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/07/k8s系列-StatefulSet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/07/k8s系列-StatefulSet/" itemprop="url">k8s系列-StatefulSet-拓扑状态</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-07T21:41:46+08:00">
+                2019-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="K8S-StatefulSet"><a href="#K8S-StatefulSet" class="headerlink" title="K8S-StatefulSet"></a>K8S-StatefulSet</h1><h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>Deployment不足以满足所有的应用编排问题，造成这个问题的根本原因，因为Deployment对应用做了一个简单的假设，一个应用的所有Pod是完全一样的，它们之间没有顺序，也无所谓到底运行在哪一台宿主机上，需要的时候Deployment可以根据Pod模板创建新的Pod，不需要的时候Deployment就可以杀掉任意一个Pod。</p>
+<p>这样的话并不能满足我们的所有场景，多个实例之间可能存在依赖关系，比如主从关系、主备关系。还有一些自身实例中自己带有一些缓存数据的，实例一旦被杀掉虽然能够重建出来但是数据已经丢了。</p>
+<p>这种实例之间有不对等关系，以及实例对外部数据有依赖的，称为有状态应用，Deployment适合用来部署无状态应用，容器技术对于有状态应用来说，困难程度直线上升，一开始<strong>有状态应用</strong>几乎成了容器技术圈子的忌讳，不过Kubernetes还是成为了第一个吃螃蟹的人，这个吃螃蟹的工具就是<code>StatefulSet</code>。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/07/k8s系列-StatefulSet/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/04/05/k8s系列-Deployment/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1528,7 +1676,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1550,7 +1698,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
