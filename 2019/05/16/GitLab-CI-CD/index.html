@@ -88,7 +88,7 @@
 <meta property="og:description" content="持续集成基本概念 持续集成(Continuous Integration)：频繁地(一天多次)将代码集成到主干。让产品可以快速迭代，同时还能保持高质量。它的核心措施是，代码集成到主干之前，必须通过自动化测试。只要有一个测试用例失败，就不能集成。“持续集成并不能消除 Bug，而是让它们非常容易发现和改正。 持续交付(Continuous Delivery)：频繁地将软件的新版本，交付给质量团队或者用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://docs.gitlab.com/ce/ci/img/pipelines.png">
-<meta property="og:updated_time" content="2019-05-16T13:15:24.462Z">
+<meta property="og:updated_time" content="2019-05-21T23:34:43.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GitLab CI&#x2F;CD">
 <meta name="twitter:description" content="持续集成基本概念 持续集成(Continuous Integration)：频繁地(一天多次)将代码集成到主干。让产品可以快速迭代，同时还能保持高质量。它的核心措施是，代码集成到主干之前，必须通过自动化测试。只要有一个测试用例失败，就不能集成。“持续集成并不能消除 Bug，而是让它们非常容易发现和改正。 持续交付(Continuous Delivery)：频繁地将软件的新版本，交付给质量团队或者用">
@@ -374,6 +374,7 @@
 <li>流程自动化，减少重复性劳动 自动化部署工作可以解放集成、测试、部署等重复性劳动</li>
 <li>保持随时部署，能快速反馈bug的修改而不是每次都需要改一段时间之后重新打包部署验证</li>
 </ul>
+<a id="more"></a>
 <h3 id="GitLab-CI"><a href="#GitLab-CI" class="headerlink" title="GitLab CI"></a>GitLab CI</h3><h4 id="GitLab-CI-CD"><a href="#GitLab-CI-CD" class="headerlink" title="GitLab CI/CD"></a>GitLab CI/CD</h4><p><code>GitLab CI/CD</code> 是 <code>GitLab Continuous Integration</code>（Gitlab持续集成）的简称。<code>GitLab</code> 自<code>GitLab 8.0</code>开始提供了持续集成的功能，且对所有项目默认开启。只要在项目仓库的根目录添加<code>.gitlab-ci.yml</code>文件，并且配置了<code>Runner</code>（运行器），那么每一次push或者合并请求（Merge Request）都会触发<code>CI Pipeline</code>。</p>
 <h4 id="GitLab-Runner"><a href="#GitLab-Runner" class="headerlink" title="GitLab Runner"></a>GitLab Runner</h4><p>GitLab Runner是一个开源项目，可以运行在 GNU / Linux，macOS 和 Windows 操作系统上。每次push的时候 GitLab CI 会根据<code>.gitlab-ci.yml</code>配置文件运行你流水线（Pipeline）中各个阶段的任务（Job），并将结果发送回 GitLab。<code>GitLab Runner</code> 是基于 <code>Gitlab CI</code> 的 API 进行构建的相互隔离的机器（或虚拟机）。<code>GitLab Runner</code> 不需要和 Gitlab 安装在同一台机器上，且考虑到 <code>GitLab Runner</code> 的资源消耗问题和安全问题，也不建议这两者安装在同一台机器上。</p>
 <ul>
