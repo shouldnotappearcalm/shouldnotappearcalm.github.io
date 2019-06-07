@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DevOps,Gitlab CI/CD,Kubernetes,Helm," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="准备已经安装运行一个 Kubernetes 集群。 安装Helm Client本来想用一键安装脚本安装的，无奈网络太慢 所以先下载 helm 的压缩包 1234567wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz# 解压tar -zxvf helm-v2.0.0-linux-amd64.tgz# 移动到/usr/bin目录下mv l">
+<meta name="keywords" content="DevOps,Gitlab CI&#x2F;CD,Kubernetes,Helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Helm版本GitLab Runner搭建使用">
+<meta property="og:url" content="http://losergzr.cn/2019/06/06/Helm安装GitLabRunner/index.html">
+<meta property="og:site_name" content="losergzr&#39;s blog">
+<meta property="og:description" content="准备已经安装运行一个 Kubernetes 集群。 安装Helm Client本来想用一键安装脚本安装的，无奈网络太慢 所以先下载 helm 的压缩包 1234567wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz# 解压tar -zxvf helm-v2.0.0-linux-amd64.tgz# 移动到/usr/bin目录下mv l">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-07T15:48:13.453Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Helm版本GitLab Runner搭建使用">
+<meta name="twitter:description" content="准备已经安装运行一个 Kubernetes 集群。 安装Helm Client本来想用一键安装脚本安装的，无奈网络太慢 所以先下载 helm 的压缩包 1234567wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz# 解压tar -zxvf helm-v2.0.0-linux-amd64.tgz# 移动到/usr/bin目录下mv l">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://losergzr.cn/2019/06/06/Helm安装GitLabRunner/"/>
+
+
+
+
+
+  <title>Helm版本GitLab Runner搭建使用 | losergzr's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">losergzr's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/06/06/Helm安装GitLabRunner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ggzr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="losergzr's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Helm版本GitLab Runner搭建使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-06T09:57:00+08:00">
+                2019-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index">
+                    <span itemprop="name">DevOps</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>已经安装运行一个 <code>Kubernetes</code> 集群。</p>
+<h2 id="安装Helm-Client"><a href="#安装Helm-Client" class="headerlink" title="安装Helm Client"></a>安装Helm Client</h2><p>本来想用一键安装脚本安装的，无奈网络太慢</p>
+<p>所以先下载 helm 的压缩包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 解压</span><br><span class="line">tar -zxvf helm-v2.0.0-linux-amd64.tgz</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 移动到/usr/bin目录下</span><br><span class="line">mv linux-amd64/helm /usr/local/bin/helm</span><br></pre></td></tr></table></figure>
+<h2 id="安装-Tiller"><a href="#安装-Tiller" class="headerlink" title="安装 Tiller"></a>安装 Tiller</h2><blockquote>
+<p>Tiller是 Helm 的服务器部分，通常在您的 <code>Kubernetes</code> 集群内部运行。但是对于开发，它也可以在本地运行，并配置为与远程 <code>Kubernetes</code> 集群通信。</p>
+</blockquote>
+<p>执行下面的命令可以安装tiller</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm init</span><br></pre></td></tr></table></figure>
+<p>repo 可以是 <code>https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code></p>
+<p>指定更多的参数</p>
+<ul>
+<li><p><code>--tiller-image</code>： 指定 tiller 的镜像，因为默认是取的google镜像仓库，需要翻墙，可以去 阿里云镜像仓库找找<br>(<a href="https://cr.console.aliyun.com/cn-hangzhou/instances/repositories" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/instances/repositories</a>)</p>
+</li>
+<li><p><code>--tiller-namespace</code>： 指定安装到哪个 namespace</p>
+</li>
+<li><code>--kube-context</code>： 制定安装到哪个K8S集群</li>
+<li><code>--service-account</code>： 指定 tiller 的 ServiceAccount</li>
+</ul>
+<blockquote>
+<p>PS:如果直接 helm init安装的，可以看到镜像拉不下来，可以去阿里镜像仓库找对应的版本拉到对应的运行节点上，然后给这个镜像重新 tag 一下。</p>
+</blockquote>
+<p>安装完可以使用下面的命令看到 helm 的版本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node9 gitlab-runner]# helm version</span><br><span class="line">Client: &amp;version.Version&#123;SemVer:"v2.14.0", GitCommit:"05811b84a3f93603dd6c2fcfe57944dfa7ab7fd0", GitTreeState:"clean"&#125;</span><br><span class="line">Server: &amp;version.Version&#123;SemVer:"v2.14.0", GitCommit:"05811b84a3f93603dd6c2fcfe57944dfa7ab7fd0", GitTreeState:"clean"&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Helm-安装-Gitlab-Runner"><a href="#Helm-安装-Gitlab-Runner" class="headerlink" title="Helm 安装 Gitlab Runner"></a>Helm 安装 Gitlab Runner</h2><p>先使用下面的命令给 tiller 授个权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl create serviceaccount --namespace kube-system tiller</span><br><span class="line"></span><br><span class="line">kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller</span><br><span class="line"></span><br><span class="line">kubectl patch deploy --namespace kube-system tiller-deploy -p '&#123;"spec":&#123;"template":&#123;"spec":&#123;"serviceAccount":"tiller"&#125;&#125;&#125;&#125;'</span><br></pre></td></tr></table></figure>
+<h2 id="配置-chart-需要的配置文件"><a href="#配置-chart-需要的配置文件" class="headerlink" title="配置 chart 需要的配置文件"></a>配置 chart 需要的配置文件</h2><p><code>values.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## The GitLab Server URL (with protocol) that want to register the runner against</span></span><br><span class="line"><span class="comment">## ref: https://docs.gitlab.com/runner/commands/README.html#gitlab-runner-register</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="attr">gitlabUrl:</span> <span class="attr">https://gitlab.example.com/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## The registration token for adding new Runners to the GitLab server. This must</span></span><br><span class="line"><span class="comment">## be retrieved from your GitLab instance.</span></span><br><span class="line"><span class="comment">## ref: https://docs.gitlab.com/ee/ci/runners/</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="attr">runnerRegistrationToken:</span> <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Set the certsSecretName in order to pass custom certificates for GitLab Runner to use</span></span><br><span class="line"><span class="comment">## Provide resource name for a Kubernetes Secret Object in the same namespace,</span></span><br><span class="line"><span class="comment">## this is used to populate the /etc/gitlab-runner/certs directory</span></span><br><span class="line"><span class="comment">## ref: https://docs.gitlab.com/runner/configuration/tls-self-signed.html#supported-options-for-self-signed-certificates</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">#certsSecretName:</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Configure the maximum number of concurrent jobs</span></span><br><span class="line"><span class="comment">## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="attr">concurrent:</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Defines in seconds how often to check GitLab for a new builds</span></span><br><span class="line"><span class="comment">## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="attr">checkInterval:</span> <span class="number">30</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## For RBAC support:</span></span><br><span class="line"><span class="attr">rbac:</span></span><br><span class="line"><span class="attr">  create:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Run the gitlab-bastion container with the ability to deploy/manage containers of jobs</span></span><br><span class="line">  <span class="comment">## cluster-wide or only within namespace</span></span><br><span class="line"><span class="attr">  clusterWideAccess:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## If RBAC is disabled in this Helm chart, use the following Kubernetes Service Account name.</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line">  <span class="comment"># serviceAccountName: default</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Configuration for the Pods that the runner launches for each new job</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="attr">runners:</span></span><br><span class="line">  <span class="comment">## Default container image to use for builds when none is specified</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line"><span class="attr">  image:</span> <span class="attr">apline:3.9</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Run all containers with the privileged flag enabled</span></span><br><span class="line">  <span class="comment">## This will allow the docker:stable-dind image to run if you need to run Docker</span></span><br><span class="line">  <span class="comment">## commands. Please read the docs before turning this on:</span></span><br><span class="line">  <span class="comment">## ref: https://docs.gitlab.com/runner/executors/kubernetes.html#using-docker-dind</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line"><span class="attr">  privileged:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Namespace to run Kubernetes jobs in (defaults to 'default')</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line">  <span class="comment"># namespace:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Build Container specific configuration</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line"><span class="attr">  builds:</span></span><br><span class="line">    <span class="comment"># cpuLimit: 200m</span></span><br><span class="line">    <span class="comment"># memoryLimit: 256Mi</span></span><br><span class="line"><span class="attr">    cpuRequests:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">    memoryRequests:</span> <span class="number">128</span><span class="string">Mi</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Service Container specific configuration</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line"><span class="attr">  services:</span></span><br><span class="line">    <span class="comment"># cpuLimit: 200m</span></span><br><span class="line">    <span class="comment"># memoryLimit: 256Mi</span></span><br><span class="line"><span class="attr">    cpuRequests:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">    memoryRequests:</span> <span class="number">128</span><span class="string">Mi</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Helper Container specific configuration</span></span><br><span class="line">  <span class="comment">##</span></span><br><span class="line"><span class="attr">  helpers:</span></span><br><span class="line">    <span class="comment"># cpuLimit: 200m</span></span><br><span class="line">    <span class="comment"># memoryLimit: 256Mi</span></span><br><span class="line"><span class="attr">    cpuRequests:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">    memoryRequests:</span> <span class="number">128</span><span class="string">Mi</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>gitlabUrl</code>： 配置gitlab的地址</li>
+<li><code>runnerRegistrationToken</code>： 项目的token，Settings -&gt; CI/CD -&gt; Runners 里面能看到</li>
+<li><code>concurrent</code>： 部署在 <code>Kubernetes</code> 上的单个 <code>GitLab Runner</code> 能够通过自动启动其他 Runner pod 来并行执行多个作业。并发设置控制一次允许的最大pod数，默认为10</li>
+<li><code>rbac.create</code>： 配置为false自动创建</li>
+<li><code>runners.image</code>： job 默认镜像</li>
+<li><code>runners.privileged</code>： 需要在 job 里面用 <code>docker</code> 环境就配置为 true 吧。</li>
+</ul>
+<p>使用如下命令添加 <code>Helm</code> 的 <code>Chart</code> 仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm repo add gitlab https://charts.gitlab.io</span><br></pre></td></tr></table></figure>
+<p>先创建 gitlab 这个名称空间</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create namespace gitlab</span><br></pre></td></tr></table></figure>
+<p>使用 Helm Chart 安装 GitLab Runner</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install --namespace gitlab --name gitlab-runner -f values.yml gitlab/gitlab-runner</span><br></pre></td></tr></table></figure>
+<p>安装完成之后可以在 Settings-&gt;CI/CD-&gt;Runner 看到新建的 Runner，可以在当前页面编辑 Runner 给这个 Runner 打上一些 tag。</p>
+<h2 id="使用-Helm-Chart-更新-GitLab-Runner"><a href="#使用-Helm-Chart-更新-GitLab-Runner" class="headerlink" title="使用 Helm Chart 更新 GitLab Runner"></a>使用 Helm Chart 更新 GitLab Runner</h2><p>先使用如下命令查看 release name</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node9 ~]# helm list</span><br><span class="line">NAME         	REVISION	UPDATED                 	STATUS  	CHART              	APP VERSION	NAMESPACE</span><br><span class="line">gitlab-runner	2       	Thu Jun  6 14:44:23 2019	DEPLOYED	gitlab-runner-0.5.2	11.11.2    	gitlab</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm upgrade --namespace gitlab -f values.yml gitlab gitlab/gitlab-runner</span><br></pre></td></tr></table></figure>
+<h2 id="使用-Helm-Chart-删除-GitLab-Runner"><a href="#使用-Helm-Chart-删除-GitLab-Runner" class="headerlink" title="使用 Helm Chart 删除 GitLab Runner"></a>使用 Helm Chart 删除 GitLab Runner</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm delete --namespace &lt;NAMESPACE&gt; &lt;RELEASE-NAME&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://github.com/helm/helm/blob/master/docs/install.md" target="_blank" rel="noopener">Helm安装</a></li>
+<li><a href="https://docs.gitlab.com/runner/install/kubernetes.html#configuring-gitlab-runner-using-the-helm-chart" target="_blank" rel="noopener">GitLab Kubernetes 安装 GitLab Runner</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DevOps/" rel="tag"># DevOps</a>
+          
+            <a href="/tags/Gitlab-CI-CD/" rel="tag"># Gitlab CI/CD</a>
+          
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+            <a href="/tags/Helm/" rel="tag"># Helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/16/GitLab-CI-CD/" rel="next" title="GitLab CI/CD">
+                <i class="fa fa-chevron-left"></i> GitLab CI/CD
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://user-images.githubusercontent.com/20592210/55679813-912ffc00-5944-11e9-9f11-4b1515b03c37.png"
+                alt="ggzr" />
+            
+              <p class="site-author-name" itemprop="name">ggzr</p>
+              <p class="site-description motion-element" itemprop="description">一只咸鱼的博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Helm-Client"><span class="nav-number">2.</span> <span class="nav-text">安装Helm Client</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Tiller"><span class="nav-number">3.</span> <span class="nav-text">安装 Tiller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Helm-安装-Gitlab-Runner"><span class="nav-number">4.</span> <span class="nav-text">Helm 安装 Gitlab Runner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-chart-需要的配置文件"><span class="nav-number">5.</span> <span class="nav-text">配置 chart 需要的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Helm-Chart-更新-GitLab-Runner"><span class="nav-number">6.</span> <span class="nav-text">使用 Helm Chart 更新 GitLab Runner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Helm-Chart-删除-GitLab-Runner"><span class="nav-number">7.</span> <span class="nav-text">使用 Helm Chart 删除 GitLab Runner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ggzr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
