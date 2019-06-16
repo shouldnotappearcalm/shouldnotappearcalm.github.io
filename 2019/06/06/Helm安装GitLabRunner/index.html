@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="准备已经安装运行一个 Kubernetes 集群。 安装Helm Client本来想用一键安装脚本安装的，无奈网络太慢 所以先下载 helm 的压缩包 1234567wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz# 解压tar -zxvf helm-v2.0.0-linux-amd64.tgz# 移动到/usr/bin目录下mv l">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-07T15:48:13.453Z">
+<meta property="og:updated_time" content="2019-06-16T14:46:37.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Helm版本GitLab Runner搭建使用">
 <meta name="twitter:description" content="准备已经安装运行一个 Kubernetes 集群。 安装Helm Client本来想用一键安装脚本安装的，无奈网络太慢 所以先下载 helm 的压缩包 1234567wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz# 解压tar -zxvf helm-v2.0.0-linux-amd64.tgz# 移动到/usr/bin目录下mv l">
@@ -366,6 +366,7 @@
 <h2 id="安装Helm-Client"><a href="#安装Helm-Client" class="headerlink" title="安装Helm Client"></a>安装Helm Client</h2><p>本来想用一键安装脚本安装的，无奈网络太慢</p>
 <p>所以先下载 helm 的压缩包</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://get.helm.sh/helm-v2.14.0-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 解压</span><br><span class="line">tar -zxvf helm-v2.0.0-linux-amd64.tgz</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 移动到/usr/bin目录下</span><br><span class="line">mv linux-amd64/helm /usr/local/bin/helm</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h2 id="安装-Tiller"><a href="#安装-Tiller" class="headerlink" title="安装 Tiller"></a>安装 Tiller</h2><blockquote>
 <p>Tiller是 Helm 的服务器部分，通常在您的 <code>Kubernetes</code> 集群内部运行。但是对于开发，它也可以在本地运行，并配置为与远程 <code>Kubernetes</code> 集群通信。</p>
 </blockquote>
