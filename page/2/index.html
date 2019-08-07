@@ -365,10 +365,17 @@
 
       
         
-          
-            <h1 id="K8S-StatefulSet"><a href="#K8S-StatefulSet" class="headerlink" title="K8S-StatefulSet"></a>K8S-StatefulSet</h1><p>前面</p>
-
-          
+          <h2 id="K8S-StatefulSet"><a href="#K8S-StatefulSet" class="headerlink" title="K8S-StatefulSet"></a>K8S-StatefulSet</h2><h3 id="存储状态"><a href="#存储状态" class="headerlink" title="存储状态"></a>存储状态</h3><p>StatefulSet 对存储状态的管理机制，主要通过使用 <code>Persistent Volume Claim</code> 的功能。</p>
+<p>Pod 中需要将容器内部的存储进行挂载出来，只要在 Pod 中使用 Volume，定义一个具体类型的 Volume 就可以了。</p>
+<p>比如下面这种最简单的 hostPath</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-volume</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">      image:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">      ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">      volumeMounts:</span></span><br><span class="line"><span class="attr">        - mountPath:</span> <span class="string">"/usr/share/nginx/html"</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">nginx-storage1</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">nginx-storage1</span></span><br><span class="line"><span class="attr">      hostPath:</span></span><br><span class="line"><span class="attr">        path:</span> <span class="string">/home/html</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/16/k8s系列-StatefulSet-存储状态/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
