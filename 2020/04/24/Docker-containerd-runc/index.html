@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,多线程," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
-<meta name="keywords" content="Java,多线程">
+<meta name="description" content="Docker、containerd、runc 关联和区别简介关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-容器运行时 （容器运行时 == Docker） = true？传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时">
+<meta name="keywords" content="losergzr&#39;s blog">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java多线程编程-ThreadLocal">
-<meta property="og:url" content="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/index.html">
+<meta property="og:title" content="Docker containerd runc">
+<meta property="og:url" content="http://losergzr.cn/2020/04/24/Docker-containerd-runc/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
+<meta property="og:description" content="Docker、containerd、runc 关联和区别简介关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-容器运行时 （容器运行时 == Docker） = true？传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T14:54:06.005Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80003650-e9a44e00-84f3-11ea-966a-880137443094.png">
+<meta property="og:updated_time" content="2020-04-24T13:48:10.689Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java多线程编程-ThreadLocal">
-<meta name="twitter:description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
+<meta name="twitter:title" content="Docker containerd runc">
+<meta name="twitter:description" content="Docker、containerd、runc 关联和区别简介关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-容器运行时 （容器运行时 == Docker） = true？传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/80003650-e9a44e00-84f3-11ea-966a-880137443094.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/"/>
+  <link rel="canonical" href="http://losergzr.cn/2020/04/24/Docker-containerd-runc/"/>
 
 
 
 
 
-  <title>Java多线程编程-ThreadLocal | losergzr's blog</title>
+  <title>Docker containerd runc | losergzr's blog</title>
   
 
 
@@ -273,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2020/04/24/Docker-containerd-runc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ggzr">
@@ -290,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java多线程编程-ThreadLocal</h1>
+          <h1 class="post-title" itemprop="name headline">Docker containerd runc</h1>
         
 
         <div class="post-meta">
@@ -302,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T18:00:07+08:00">
-                2019-05-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-24T21:47:48+08:00">
+                2020-04-24
               </time>
             
 
@@ -312,28 +314,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -362,9 +342,41 @@
       
 
       
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>ThreadLocal</code> 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。</p>
-<p>简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的</p>
-<p>##</p>
+        <h1 id="Docker、containerd、runc-关联和区别"><a href="#Docker、containerd、runc-关联和区别" class="headerlink" title="Docker、containerd、runc 关联和区别"></a>Docker、containerd、runc 关联和区别</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-<em>容器运行时</em></p>
+<h2 id="（容器运行时-Docker）-true？"><a href="#（容器运行时-Docker）-true？" class="headerlink" title="（容器运行时 == Docker） = true？"></a>（容器运行时 == Docker） = true？</h2><p>传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时就是一个例子。后一个含义最接近“容器运行时”。容器运行时负责运行容器的所有部分，而容器实际上并未在运行程序本身。正如我们将在本系列文章中看到的那样，运行时实现了各种级别的功能，但是实际上运行容器是调用容器运行时所需的全部。</p>
+<a id="more"></a>
+<h2 id="为什么容器运行时如此混乱"><a href="#为什么容器运行时如此混乱" class="headerlink" title="为什么容器运行时如此混乱"></a>为什么容器运行时如此混乱</h2><p>Docker 2013 年发布后，很大程度上解决了开发人员端到端运行容器的许多问题，它的主要功能包含如下：</p>
+<ul>
+<li>容器镜像格式</li>
+<li>构建容器镜像的方法（Dockerfile、docker 构建）</li>
+<li>管理容器镜像的方法（docker image、docker rmi 等）</li>
+<li>管理容器实例的方法（docker ps、docker rm 等）</li>
+<li>共享容器镜像的方法（docker pull、docker push 等）</li>
+<li>一种运行容器的方法（docker run）</li>
+</ul>
+<p>当时的 Docker 还是一个整体的系统，但是上面提到的这些功能也没有相互以来，每一个都可以用更小、更集中的工具来实现，这些工具可以一起使用，每种工具都可以通过一种通用格式（容器标准协同工作）。</p>
+<p>因此 Docker、Google、CoreOS 和其他供应商创建了 <a href="https://www.opencontainers.org/" target="_blank" rel="noopener">Open Container Initiative(OCI)</a>，然后开源了一个真正用于运行容器的工具和库-<a href="https://github.com/opencontainers/runc" target="_blank" rel="noopener">runc</a>，并将其捐赠给OCI，作为<a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">OCI运行时规范</a>的参考实现</p>
+<p>Docker 对 OCI 贡献的是一种 “运行” 容器的标准方法，仅此而已，不包括镜像规范或 registry pull/push 规范，运行 Docker 容器的时候真正的流程如下：</p>
+<ol>
+<li>拉取镜像</li>
+<li>解压镜像包，展开镜像层数为单个文件系统</li>
+<li>从解压“包”中运行容器</li>
+</ol>
+<p>Docker 标准化的是 《从解压包中运行容器》 这条，之前可能大家都以为容器运行时就支持 Docker 支持的所有的功能，最后 Docker 官方澄清了原始规范（original spec）只说明了组成 runtime 的 “运行容器” 部门，今天这种认为容器运行时 = Docker 的想法仍然存在，就导致了容器运行时成为一个令人困惑的话题。</p>
+<h2 id="Low-Level-和-High-Level-容器运行时"><a href="#Low-Level-和-High-Level-容器运行时" class="headerlink" title="Low-Level 和 High-Level 容器运行时"></a>Low-Level 和 High-Level 容器运行时</h2><p>如果你了解过容器运行时的话，你可能会想到很多，比如 runc、lxc、lmctfy、Docker(containerd)、rkt、cri-o，这些都是针对不同情况构建的，并且实现了不同的功能，有些容器运行时比如 containerd 和 cri-o 就是使用的 runc 来实现真正的容器运行，runc 其实主要是作为底层实现，上层镜像管理（image 传输、image 管理、image 解压）和 API 可以视为比较高级的功能。</p>
+<p>经过上面的分析我们可以了解到容器运行时相当的复杂，每个运行时涵盖了从低级到高级的不同部分，下面这个图可以比较直观的展示这一点</p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80003650-e9a44e00-84f3-11ea-966a-880137443094.png" alt="runtimes"></p>
+<p>因此出于实际母的我们把通常只关注正在运行的容器的实际容器运行时通常称为“低级容器运行时”。支持更多高级功能（镜像管理、gRPC、WebAPI） 的容器运行时通常称为 “高级容器运行时”，通常仅称为“容器运行时”。需要注意的是，低级运行时和高级运行时是解决不同问题的根本不同的事物。</p>
+<p>容器是通过 <a href="https://en.wikipedia.org/wiki/Linux_namespaces" target="_blank" rel="noopener">Linux Namespace</a> 和 <a href="https://en.wikipedia.org/wiki/Cgroups" target="_blank" rel="noopener">Cgroups</a> 来实现的。</p>
+<ul>
+<li>Linux 命名空间可以为每个容器虚拟化系统资源，比如文件系统和网格，让你看不到其他的东西，让你以为你就是真正的宿主机空间</li>
+<li>Cgroups 可以限制每个容器的使用资源，比如 CPU 和内存</li>
+</ul>
+<p>在最低 Level 中，容器运行时为这些容器设置命名空间和 cgroups，然后在这些名称空间和 cgroups 中运行命令，Low-Level 容器运行时支持使用这些操作系统功能。</p>
+<h3 id="Low-Level"><a href="#Low-Level" class="headerlink" title="Low-Level"></a>Low-Level</h3><p>通常使用容器的开发人员需要的不仅是 low-level 容器运行时提供的功能，他们还需要围绕 上层镜像管理（image 传输、image 管理、image 解压）和 API。这些特性是由 high-level 容器运行时提供的，low-level 容器运行时通常是那些实现 high-level 容器运行时的开发人员用到的。</p>
+<p>可能 low-level 容器运行时的开发人员会觉得 containerd 和 cri-o 这样的 high-level 容器运行时不算事容器运行时，因为他们的底层使用的还是 runc 这样的 low-elevel 容器运行时，但是对用户来说他们是提供运行容器能力的单个组件，实现上可以相互替换，因此从这个角度来看称其为容器运行时仍然有意义。</p>
+<p>虽然 containerd 和 cri-o 都是用了 runc，但是他们还是两个具有很多不同特性的项目。</p>
+<h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h2><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.ianlewis.org/en/container-runtimes-part-1-introduction-container-r" target="_blank" rel="noopener">Container Runtimes</a></p>
 
       
     </div>
@@ -380,14 +392,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-            <a href="/tags/多线程/" rel="tag"># 多线程</a>
-          
-        </div>
-      
 
       
       
@@ -397,8 +401,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/12/Java多线程编程-ForkJoinPool/" rel="next" title="Java多线程编程-Fork/Join">
-                <i class="fa fa-chevron-left"></i> Java多线程编程-Fork/Join
+              <a href="/2019/06/06/Helm安装GitLabRunner/" rel="next" title="Helm版本GitLab Runner搭建使用">
+                <i class="fa fa-chevron-left"></i> Helm版本GitLab Runner搭建使用
               </a>
             
           </div>
@@ -406,10 +410,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/16/GitLab-CI-CD/" rel="prev" title="GitLab CI/CD">
-                GitLab CI/CD <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -545,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker、containerd、runc-关联和区别"><span class="nav-number">1.</span> <span class="nav-text">Docker、containerd、runc 关联和区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（容器运行时-Docker）-true？"><span class="nav-number">1.2.</span> <span class="nav-text">（容器运行时 == Docker） = true？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么容器运行时如此混乱"><span class="nav-number">1.3.</span> <span class="nav-text">为什么容器运行时如此混乱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-Level-和-High-Level-容器运行时"><span class="nav-number">1.4.</span> <span class="nav-text">Low-Level 和 High-Level 容器运行时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Low-Level"><span class="nav-number">1.4.1.</span> <span class="nav-text">Low-Level</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#未完待续"><span class="nav-number">1.5.</span> <span class="nav-text">未完待续</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">1.6.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
             
 
           </div>
