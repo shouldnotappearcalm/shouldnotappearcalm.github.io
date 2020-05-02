@@ -88,7 +88,7 @@
 <meta property="og:description" content="Docker、containerd、runc 关联和区别简介关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-容器运行时 （容器运行时 == Docker） = true？传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80003650-e9a44e00-84f3-11ea-966a-880137443094.png">
-<meta property="og:updated_time" content="2020-04-26T16:53:29.760Z">
+<meta property="og:updated_time" content="2020-05-02T15:28:59.418Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker containerd runc">
 <meta name="twitter:description" content="Docker、containerd、runc 关联和区别简介关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-容器运行时 （容器运行时 == Docker） = true？传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时">
@@ -414,6 +414,19 @@
 <p>使用unshare命令，您可以运行带有某些从其父级“未共享”命名空间的程序。从本质上讲，这意味着取消共享将运行在新的名称空间集中传递的任何程序。</p>
 </blockquote>
 <h2 id="构建一个简单的运行时"><a href="#构建一个简单的运行时" class="headerlink" title="构建一个简单的运行时"></a>构建一个简单的运行时</h2><p>让我们逐步使用一个简单的临时容器运行时来启动一个容器，我们可以使用标准 Linux 命令像 cgcreate、cgset、cgexec、chroot、unshare 等。你需要以 root 身份运行以下大多数的命令。</p>
+<p>首先我们为容器设置一个根文件系统，我们将 busybox 容器作为基础，在这里我们创建一个临时目录并将 busybox 提取到其中，但是这些命令大多都需要以 root 来运行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CID=$(docker create busybox)</span><br><span class="line">ROOTFS=$(mktemp -d)</span><br><span class="line">docker export $CID | tar -xf - -C $ROOTFS</span><br></pre></td></tr></table></figure>
+<p>现在我们来使用 cgroup 设置对内存和 CPU 的限制，设置内存限制以字节为单位设置，这里我们将内存设置为 100MB。(Centos 的同学请先安装一下 libcgroup-tools)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UUID=$(uuidgen)</span><br><span class="line">cgcreate -g cpu,memory:$UUID</span><br><span class="line">cgset -r memory.limit_in_bytes=100000000 $UUID</span><br><span class="line">cgset -r cpu.shares=512 $UUID</span><br></pre></td></tr></table></figure>
+<p>可以通过如下的方式设置 CPU 使用率，我们使用 CPU shares 来设置 CPU 限制，shares 是相对同时其他运行的进程 CPU 时间。自己运行的容器可以使用整个 CPU，但是如果其他容器正在运行，则他们可以使用与其 CPU 份额成比例的 CPU。</p>
+<p>基于 CPU 核心数的 CPU 限制会更加的复杂一些，它们可以使你可以对容器的可用 CPU 核心数量设置硬性限制，要限制 CPU 核心需要在 cgroup 上设置两个选项，cfs_period_us 和 cfs_quota_us，cfs_period_us 指定检查 CPU 使用率的频率，而 cfs_quota_us 指定一个任务在一个周期内在一个内核上运行的时间，两者都是以毫秒为单位的。</p>
+<p>比如，我们想限制容器使用两个核心，我们可以使用上面的两个参数来设置一秒的时间使用两秒的配额，一秒钟是 1000000 毫秒，这就能让我们在我们的进程内在一秒内使用两个内核。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cgset -r cpu.cfs_period_us=1000000 $UUID</span><br><span class="line">cgset -r cpu.cfs_quota_us=2000000 $UUID</span><br></pre></td></tr></table></figure>
+<p>接下来我们可以在容器中使用命令，这将在我们使用 cgroup 创建的空间中执行命令，取消指定的命名空间共享，设置主机名，并且使用 chroot 切换至我们的文件系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cgexec -g cpu,memory:$UUID \ </span><br><span class="line"><span class="meta">&gt;</span> unshare -uinpUrf --mount-proc \ </span><br><span class="line"><span class="meta">&gt;</span> sh -c "/bin/hostname $UUID &amp;&amp; chroot $ROOTFS /bin/sh"</span><br></pre></td></tr></table></figure>
+<p>执行完成之后我们可以通过删除 cgroup 创建的 cgroup 和临时目录进行清理</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cgdelete -r -g cpu,memory:$UUID</span><br><span class="line">rm -r $ROOTFS</span><br></pre></td></tr></table></figure>
+<p>为了进一步演示这是如何工作的，这有一个 bash 编写了一个名为 <a href="https://github.com/ianlewis/execc" target="_blank" rel="noopener">execc</a> 的简单运行时。支持 mount, user, pid, ipc, uts, and network namespaces;设置内存的限制;按核数设置 CPU 限制;挂载 proc 文件系统;并在其自己的根文件系统中运行容器。</p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
 <li><a href="https://www.ianlewis.org/en/container-runtimes-part-1-introduction-container-r" target="_blank" rel="noopener">Container Runtimes</a></li>
 <li><a href="https://medium.com/@teddyking/linux-namespaces-850489d3ccf" target="_blank" rel="noopener">Unshare 相关</a></li>
