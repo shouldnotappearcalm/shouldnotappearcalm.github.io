@@ -89,11 +89,11 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80910397-caae8300-8d61-11ea-995c-a6bfc23f5688.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80910593-03029100-8d63-11ea-8680-7c056f8c4a81.png">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/173548_dac50126_1413312.png">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/173735_11ab7f62_1413312.png">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/174049_2512514f_1413312.png">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/232120_2847d923_1413312.png">
-<meta property="og:updated_time" content="2020-05-03T15:46:04.777Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918681-cd789a80-8d98-11ea-8db5-c4cf807c4049.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918689-de291080-8d98-11ea-95e7-61c327796e8e.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918707-f00ab380-8d98-11ea-811e-12e3d4d59c73.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918721-09136480-8d99-11ea-8bfa-5b4caf67fa83.png">
+<meta property="og:updated_time" content="2020-05-03T15:52:17.367Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="High-level容器运行时">
 <meta name="twitter:description" content="High-level 容器运行时简介High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-l">
@@ -361,20 +361,20 @@
 <p>containerd 也提供了可用于其交互的 API 和客户端应用程序，就像 Docker 有 Docker Client 一样，containerd 的客户端命令是 ctr。</p>
 <p>我们可以使用 ctr 来拉取镜像。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr images pull docker.io/library/redis:latest</span><br></pre></td></tr></table></figure>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/173548_dac50126_1413312.png" alt="ctr拉取镜像" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918681-cd789a80-8d98-11ea-8db5-c4cf807c4049.png" alt="image"></p>
 <p>使用 ctr 命令列出所有的镜像</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr images list</span><br></pre></td></tr></table></figure>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/173735_11ab7f62_1413312.png" alt="ctr查看镜像列表" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918689-de291080-8d98-11ea-95e7-61c327796e8e.png" alt="image"></p>
 <p>使用运行一个容器</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container create docker.io/library/redis:latest redis</span><br></pre></td></tr></table></figure>
 <p>查看运行中的容器：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container create docker.io/library/redis:latest redis</span><br></pre></td></tr></table></figure>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/174049_2512514f_1413312.png" alt="ctr容器列表" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918707-f00ab380-8d98-11ea-811e-12e3d4d59c73.png" alt="image"></p>
 <p>停止一个容器</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container delete redis</span><br></pre></td></tr></table></figure>
 <p>这些命令看起来是不是非常的熟悉，跟 Docker 跟用户交互的方式非常像，然而根 Docker 不同的是 containerd 只专注于运行容器，因此他不提供构建容器的机制，Docker 专注于前端用户，而 containerd 专注于实际执行，比如在服务器上运行容器，但是 containerd 将构建镜像之类的任务留给了其他的工具。</p>
 <p>containerd 架构图，向上为 Docker Daemon 提供了 gRPC 接口，使得 Docker Daemon 屏蔽下面的结构变化，确保原有接口向下兼容，向下通过 containerd-shim 结合 runc，使得引擎可以独立升级，避免之前 Docker Daemon 升级会导致所有原有容器不可用的问题。</p>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/232120_2847d923_1413312.png" alt="containerd" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918721-09136480-8d99-11ea-8bfa-5b4caf67fa83.png" alt="image"></p>
 <p>Docker、containerd、containerd-shim 之间的关系可以通过启动一个 Docker 容器，观察进程之间的关联，首先我们先启动一个容器，当然启动之前我们可以安装 pstree。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">yum install psmisc</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动容器</span><br><span class="line">docker run -d busybox sleep 1000</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 使用如下命令可以查看 dockerd 的进程 id 1为 8124</span><br><span class="line">ps -ef|grep dockerd</span><br><span class="line">root      8124     1  0 Apr06 ?        00:55:12 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock</span><br><span class="line">root     12422 11179  0 23:28 pts/2    00:00:00 grep --color=auto dockerd</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>使用 pstree 输出结果如下</span><br><span class="line">pstree -l -a -A 8124</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dockerd</span><br><span class="line">  |-docker-containe --config /var/run/docker/containerd/containerd.toml</span><br><span class="line">  |   |-docker-containe -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/5f65905c8c2682b9e746c210225d55bc17ff4f5b5b5449f2e0dc4d48bd0e6677 -address /var/run/docker/containerd/docker-containerd.sock -containerd-binary /usr/bin/docker-containerd -runtime-root /var/run/docker/runtime-runc</span><br><span class="line">  |   |   |-sleep 1000</span><br><span class="line">  |   |   `-8*[&#123;docker-containe&#125;]</span><br><span class="line">  |   `-23*[&#123;docker-containe&#125;]</span><br><span class="line">  `-21*[&#123;dockerd&#125;]</span><br></pre></td></tr></table></figure>
 <p>虽然 pstree 命令截断了命令，但我们还是能够看出，当 Docker daemon 启动之后，dockerd 和 docker-containerd 进程一直存在。当启动容器之后，docker-containerd 进程（也是这里介绍的 containerd 组件）会创建 docker-containerd-shim 进程，其中的参数 b9a04a582b66206492d29444b5b7bc6ec9cf1eb83eff580fe43a039ad556e223 就是要启动容器的 id。最后 docker-containerd-shim 子进程，已经是实际在容器中运行的进程（既 sleep 1000）</p>

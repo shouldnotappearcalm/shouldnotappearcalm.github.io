@@ -347,7 +347,7 @@
 <p>预期容器运行时支持镜像管理并且支持 Kubernetes Pod，并管理各个容器，所以从要求中也能看出来 Kubernetes 运行时要求的必须是 high-level 运行时，low-level 运行时缺少必要的功能。</p>
 <p>为了了解更多关于 CRI 的知识，有必要了解 Kubernetes 的架构，Kubelet 是一个位于 Kubernetes 集群中每个工作节点上的代理，Kubelet 负责管理节点的容器工作负载，在实际运行中，kubelet 使用 CRI 在同一节点上运行的容器运行时进行通信，有个 CRI 这个抽象层，我们可以随时将实际的容器运行时切换到其他实现了 CRI 接口的容器运行时，而不必局限某一种容器运行时，也不必内置于 kubelet 中。</p>
 <p>kubernetes 中关于 CRI 架构图</p>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/211726_c1237c76_1413312.png" alt="CRI" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918597-64912280-8d98-11ea-92b7-a0c98aefe740.png" alt="image"></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/05/03/CRI/#more" rel="contents">

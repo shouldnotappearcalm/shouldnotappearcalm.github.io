@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="losergzr&#39;s blog">
 <meta property="og:description" content="CRI简介Kubernetes 运行时是支持容器运行时接口（CRI） 的高级容器运行时，CRI 在 Kubernetes 1.5 中引入，并且充当 kubelet 和容器运行时之间的桥梁，并且希望像 Docker、containerd 这样的高级容器运行时实现 CRI 接口。 预期容器运行时支持镜像管理并且支持 Kubernetes Pod，并管理各个容器，所以从要求中也能看出来 Kubernet">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/211726_c1237c76_1413312.png">
-<meta property="og:updated_time" content="2020-05-03T15:15:52.976Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918597-64912280-8d98-11ea-92b7-a0c98aefe740.png">
+<meta property="og:updated_time" content="2020-05-03T15:49:33.323Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CRI">
 <meta name="twitter:description" content="CRI简介Kubernetes 运行时是支持容器运行时接口（CRI） 的高级容器运行时，CRI 在 Kubernetes 1.5 中引入，并且充当 kubelet 和容器运行时之间的桥梁，并且希望像 Docker、containerd 这样的高级容器运行时实现 CRI 接口。 预期容器运行时支持镜像管理并且支持 Kubernetes Pod，并管理各个容器，所以从要求中也能看出来 Kubernet">
-<meta name="twitter:image" content="https://images.gitee.com/uploads/images/2020/0503/211726_c1237c76_1413312.png">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/80918597-64912280-8d98-11ea-92b7-a0c98aefe740.png">
 
 
 
@@ -346,7 +346,7 @@
 <p>预期容器运行时支持镜像管理并且支持 Kubernetes Pod，并管理各个容器，所以从要求中也能看出来 Kubernetes 运行时要求的必须是 high-level 运行时，low-level 运行时缺少必要的功能。</p>
 <p>为了了解更多关于 CRI 的知识，有必要了解 Kubernetes 的架构，Kubelet 是一个位于 Kubernetes 集群中每个工作节点上的代理，Kubelet 负责管理节点的容器工作负载，在实际运行中，kubelet 使用 CRI 在同一节点上运行的容器运行时进行通信，有个 CRI 这个抽象层，我们可以随时将实际的容器运行时切换到其他实现了 CRI 接口的容器运行时，而不必局限某一种容器运行时，也不必内置于 kubelet 中。</p>
 <p>kubernetes 中关于 CRI 架构图</p>
-<p><img src="https://images.gitee.com/uploads/images/2020/0503/211726_c1237c76_1413312.png" alt="CRI" title="屏幕截图.png"></p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80918597-64912280-8d98-11ea-92b7-a0c98aefe740.png" alt="image"></p>
 <a id="more"></a>
 <h2 id="CRI-运行时例子"><a href="#CRI-运行时例子" class="headerlink" title="CRI 运行时例子"></a>CRI 运行时例子</h2><h3 id="containerd"><a href="#containerd" class="headerlink" title="containerd"></a>containerd</h3><p>在前面的文章中提到过 containerd，它是一个 high-level 运行时，containerd 可能是现在最流行的容器运行时，他将 CRI 作为一个插件实现并且默认开启，它默认使用 unix 套接字进行监听，你可以像如下这样使用 crictl 连接 containerd：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF | sudo tee /etc/crictl.yaml</span><br><span class="line">runtime-endpoint: unix:///run/containerd/containerd.sock</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
