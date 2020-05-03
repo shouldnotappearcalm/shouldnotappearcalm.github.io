@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918689-de291080-8d98-11ea-95e7-61c327796e8e.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918707-f00ab380-8d98-11ea-811e-12e3d4d59c73.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80918721-09136480-8d99-11ea-8bfa-5b4caf67fa83.png">
-<meta property="og:updated_time" content="2020-05-03T15:52:17.367Z">
+<meta property="og:updated_time" content="2020-05-03T15:54:41.567Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="High-level容器运行时">
 <meta name="twitter:description" content="High-level 容器运行时简介High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-l">
@@ -385,7 +385,7 @@
 <h3 id="rkt"><a href="#rkt" class="headerlink" title="rkt"></a>rkt</h3><p>rkt 也是一个既有 high-level 也有 low-level 的运行时。与 Docker 非常的相似，rkt 也允许你构建镜像，拉取和管理镜像，也可以通过命令运行容器，但是 rkt 没有 Docker 的长时间守护进程和远程 API。</p>
 <p>rkt 社区虽然不是非常的活跃，但是也是容器历史中的一个重要组成部分。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取远端镜像</span><br><span class="line">sudo rkt fetch coreos.com/etcd:v3.3.10</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看本地镜像列表</span><br><span class="line">sudo rkt image list</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 删除镜像</span><br><span class="line">sudo rkt image rm coreos.com/etcd:v3.3.10</span><br></pre></td></tr></table></figure>
-<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><p><a href="https://www.ianlewis.org/en/container-runtimes-part-3-high-level-runtimes" target="_blank" rel="noopener">high-level runtimes</a></p>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><p><a href="https://www.ianlewis.org/en/container-runtimes-part-3-high-level-runtimes" target="_blank" rel="noopener">high-level runtimes</a><br><a href="https://www.infoq.cn/article/2017/02/Docker-Containerd-RunC" target="_blank" rel="noopener">Docker、Containerd、RunC…：你应该知道的所有</a></p>
 
       
     </div>
