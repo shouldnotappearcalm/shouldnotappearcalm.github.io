@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Java,多线程," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,24 @@
 
 
 
-<meta name="description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
-<meta name="keywords" content="Java,多线程">
+<meta name="description" content="High-level 容器运行时简介High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-l">
+<meta name="keywords" content="losergzr&#39;s blog">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java多线程编程-ThreadLocal">
-<meta property="og:url" content="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/index.html">
+<meta property="og:title" content="High-level容器运行时">
+<meta property="og:url" content="http://losergzr.cn/2020/05/03/High-level容器运行时/index.html">
 <meta property="og:site_name" content="losergzr&#39;s blog">
-<meta property="og:description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
+<meta property="og:description" content="High-level 容器运行时简介High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-l">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T14:54:06.005Z">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80910397-caae8300-8d61-11ea-995c-a6bfc23f5688.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/20592210/80910593-03029100-8d63-11ea-8680-7c056f8c4a81.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/173548_dac50126_1413312.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/173735_11ab7f62_1413312.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2020/0503/174049_2512514f_1413312.png">
+<meta property="og:updated_time" content="2020-05-03T13:04:23.490Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java多线程编程-ThreadLocal">
-<meta name="twitter:description" content="介绍ThreadLocal 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。 简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的 ##">
+<meta name="twitter:title" content="High-level容器运行时">
+<meta name="twitter:description" content="High-level 容器运行时简介High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-l">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/20592210/80910397-caae8300-8d61-11ea-995c-a6bfc23f5688.png">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/"/>
+  <link rel="canonical" href="http://losergzr.cn/2020/05/03/High-level容器运行时/"/>
 
 
 
 
 
-  <title>Java多线程编程-ThreadLocal | losergzr's blog</title>
+  <title>High-level容器运行时 | losergzr's blog</title>
   
 
 
@@ -273,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2019/05/12/Java多线程编程-ThreadLocal/">
+    <link itemprop="mainEntityOfPage" href="http://losergzr.cn/2020/05/03/High-level容器运行时/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ggzr">
@@ -290,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java多线程编程-ThreadLocal</h1>
+          <h1 class="post-title" itemprop="name headline">High-level容器运行时</h1>
         
 
         <div class="post-meta">
@@ -302,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T18:00:07+08:00">
-                2019-05-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-03T17:07:19+08:00">
+                2020-05-03
               </time>
             
 
@@ -312,28 +318,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -362,9 +346,36 @@
       
 
       
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>ThreadLocal</code> 的初衷是用来解决线程并发的时候，解决变量共享的问题，但是因为过度设计，比如弱引用、哈希碰撞等原因，导致理解难度增大，使用成本高，反而容易出现内存泄露、脏数据、共享对象更新等问题。</p>
-<p>简要言之：往ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的</p>
-<p>##</p>
+        <h1 id="High-level-容器运行时"><a href="#High-level-容器运行时" class="headerlink" title="High-level 容器运行时"></a>High-level 容器运行时</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>High-level 运行时相对于 Low-level 运行时处于较上层的位置，low-level 运行时负责实际运行容器，high-level 运行时负责传输和管理容器镜像，解压镜像并且传递给 low-level 运行时来运行容器。通常 high-level 运行时提供一个守护进程和一个 API，更上层的应用可以通过他们来运行容器，将实际工作指派给 low-level 运行时或者其他 high-level 运行时。</p>
+<p>high-level 运行时还可以提供一些 low-level 运行时的功能，但是这些功能可以让主机上的各个容器使用，例如网络名称空间的管理，运行一个容器加入另一个容器的网络名称空间。</p>
+<p>下面这个图表示了各个组件之间的关系。</p>
+<a id="more"></a>
+<p><img src="https://user-images.githubusercontent.com/20592210/80910397-caae8300-8d61-11ea-995c-a6bfc23f5688.png" alt="image"></p>
+<h2 id="High-Level-运行时"><a href="#High-Level-运行时" class="headerlink" title="High-Level 运行时"></a>High-Level 运行时</h2><h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>Docker 是第一个开源的容器运行时，由 dotCloud 公司开发，公司后面改名叫 Docker 了，用于在容器中运行用户的 Web 程序。</p>
+<p>Docker 是一个包含 packing、sharing、building 和运行容器的容器运行时，Docker 是 client/server 架构，最初是一个单一的守护进程、dockerd 和 Docker client 构建，这个守护进程提供了构建容器、管理镜像和运行容器的大多数逻辑，以及一个 API。Docker Client 可以发送命令从守护进程获取信息。</p>
+<p>Docker 最初包含了实现 high-level 和 low-level 运行时的特性，但是后来这些特性被分解为 runc 和 containerd 两个独立的项目，Docker 现在由 dockerdd守护进程、docker-containerd 守护进程和 docker-runc 组成，docker-containerd 和 docker-runc 只是 Docker 打包了 containerd 和 runc。</p>
+<p><img src="https://user-images.githubusercontent.com/20592210/80910593-03029100-8d63-11ea-8680-7c056f8c4a81.png" alt="image"></p>
+<p>dockerd 提供了构建镜像等功能，dockerd 使用了 docker-containerd 提供的镜像管理和运行容器等功能。Docker 的构建逻辑是解释 Dockerfile，使用 containerd 在容器中运行必要的命令，并将生成的容器文件系统保存为镜像。</p>
+<h3 id="containerd"><a href="#containerd" class="headerlink" title="containerd"></a>containerd</h3><p>containerd 是从 Docker 中拆出去的 high-level 运行时，就像 runc 一样，他作为 low-level 运行时组件，containerd 也被 Docker 作为 high-level 运行时组件。</p>
+<p>containerd 也提供了可用于其交互的 API 和客户端应用程序，就像 Docker 有 Docker Client 一样，containerd 的客户端命令是 ctr。</p>
+<p>我们可以使用 ctr 来拉取镜像。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr images pull docker.io/library/redis:latest</span><br></pre></td></tr></table></figure>
+<p><img src="https://images.gitee.com/uploads/images/2020/0503/173548_dac50126_1413312.png" alt="ctr拉取镜像" title="屏幕截图.png"></p>
+<p>使用 ctr 命令列出所有的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr images list</span><br></pre></td></tr></table></figure>
+<p><img src="https://images.gitee.com/uploads/images/2020/0503/173735_11ab7f62_1413312.png" alt="ctr查看镜像列表" title="屏幕截图.png"></p>
+<p>使用运行一个容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container create docker.io/library/redis:latest redis</span><br></pre></td></tr></table></figure>
+<p>查看运行中的容器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container create docker.io/library/redis:latest redis</span><br></pre></td></tr></table></figure>
+<p><img src="https://images.gitee.com/uploads/images/2020/0503/174049_2512514f_1413312.png" alt="ctr容器列表" title="屏幕截图.png"></p>
+<p>停止一个容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ctr container delete redis</span><br></pre></td></tr></table></figure>
+<p>这些命令看起来是不是非常的熟悉，跟 Docker 跟用户交互的方式非常像，然而根 Docker 不同的是 containerd 只专注于运行容器，因此他不提供构建容器的机制，Docker 专注于前端用户，而 containerd 专注于实际执行，比如在服务器上运行容器，但是 containerd 将构建镜像之类的任务留给了其他的工具。</p>
+<h3 id="rkt"><a href="#rkt" class="headerlink" title="rkt"></a>rkt</h3><p>rkt 也是一个既有 high-level 也有 low-level 的运行时。与 Docker 非常的相似，rkt 也允许你构建镜像，拉取和管理镜像，也可以通过命令运行容器，但是 rkt 没有 Docker 的长时间守护进程和远程 API。</p>
+<p>rkt 社区虽然不是非常的活跃，但是也是容器历史中的一个重要组成部分。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取远端镜像</span><br><span class="line">sudo rkt fetch coreos.com/etcd:v3.3.10</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看本地镜像列表</span><br><span class="line">sudo rkt image list</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 删除镜像</span><br><span class="line">sudo rkt image rm coreos.com/etcd:v3.3.10</span><br></pre></td></tr></table></figure>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><p><a href="https://www.ianlewis.org/en/container-runtimes-part-3-high-level-runtimes" target="_blank" rel="noopener">high-level runtimes</a></p>
 
       
     </div>
@@ -380,14 +391,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-            <a href="/tags/多线程/" rel="tag"># 多线程</a>
-          
-        </div>
-      
 
       
       
@@ -397,8 +400,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/12/Java多线程编程-ForkJoinPool/" rel="next" title="Java多线程编程-Fork/Join">
-                <i class="fa fa-chevron-left"></i> Java多线程编程-Fork/Join
+              <a href="/2020/04/24/Docker-containerd-runc/" rel="next" title="Docker containerd runc">
+                <i class="fa fa-chevron-left"></i> Docker containerd runc
               </a>
             
           </div>
@@ -406,10 +409,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/16/GitLab-CI-CD/" rel="prev" title="GitLab CI/CD">
-                GitLab CI/CD <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -545,7 +544,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#High-level-容器运行时"><span class="nav-number">1.</span> <span class="nav-text">High-level 容器运行时</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#High-Level-运行时"><span class="nav-number">1.2.</span> <span class="nav-text">High-Level 运行时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">1.2.1.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#containerd"><span class="nav-number">1.2.2.</span> <span class="nav-text">containerd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rkt"><span class="nav-number">1.2.3.</span> <span class="nav-text">rkt</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">1.3.</span> <span class="nav-text">相关链接</span></a></li></ol></li></ol></div>
             
 
           </div>
