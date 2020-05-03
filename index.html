@@ -344,7 +344,7 @@
       
         
           <h1 id="Docker、containerd、runc-关联和区别"><a href="#Docker、containerd、runc-关联和区别" class="headerlink" title="Docker、containerd、runc 关联和区别"></a>Docker、containerd、runc 关联和区别</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>关于 Docker 是什么大家可能并不陌生，但是对于 Docker 到底怎么运行的，内部包含的组件我们可能并不是特别清楚，这里我们要先引入一个概念-<em>容器运行时</em></p>
-<h2 id="（容器运行时-Docker）-true？"><a href="#（容器运行时-Docker）-true？" class="headerlink" title="（容器运行时 == Docker） = true？"></a>（容器运行时 == Docker） = true？</h2><p>传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时就是一个例子。后一个含义最接近“容器运行时”。容器运行时负责运行容器的所有部分，而容器实际上并未在运行程序本身。正如我们将在本系列文章中看到的那样，运行时实现了各种级别的功能，但是实际上运行容器是调用容器运行时所需的全部。</p>
+<h2 id="（容器运行时-Docker）？"><a href="#（容器运行时-Docker）？" class="headerlink" title="（容器运行时 == Docker）？"></a>（容器运行时 == Docker）？</h2><p>传统上，计算机程序员可能将“运行时”称为程序运行时的生命周期阶段，或者是支持其执行的语言的特定实现。Java HotSpot运行时就是一个例子。后一个含义最接近“容器运行时”。容器运行时负责运行容器的所有部分，而容器实际上并未在运行程序本身。正如我们将在本系列文章中看到的那样，运行时实现了各种级别的功能，但是实际上运行容器是调用容器运行时所需的全部。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/04/24/Docker-containerd-runc/#more" rel="contents">
